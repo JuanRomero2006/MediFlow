@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agenda citas médicas, encuentra especialistas y accede a servicios de salud.">
+    <title>Salud Viva | Tu salud, más cerca y más fácil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="container nav" aria-label="Navegación principal">
+            <a class="brand" href="#inicio"><span class="brand-mark">♥</span><span>Salud Viva</span></a>
+            <div class="desktop-nav">
+                <a class="active" href="#inicio">Inicio</a>
+                <a href="#nosotros">Nosotros</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#especialidades">Especialidades</a>
+                <a href="#profesionales">Profesionales</a>
+                <a href="#faq">Preguntas frecuentes</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+            <div class="nav-actions">
+                <a class="btn ghost" href="#">Iniciar sesión</a><a class="btn" href="#cita">Solicitar cita</a>
+            </div><button class="menu-button" aria-expanded="false" aria-controls="mobile-menu"
+                aria-label="Abrir menú">☰</button>
+        </nav>
+        <div id="mobile-menu" class="mobile-menu"><a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a
+                href="#servicios">Servicios</a><a href="#especialidades">Especialidades</a><a
+                href="#profesionales">Profesionales</a><a href="#faq">Preguntas frecuentes</a><a
+                href="#contacto">Contacto</a>
+            <div class="mobile-actions"><a class="btn outline" href="#">Iniciar sesión</a><a class="btn"
+                    href="#cita">Solicitar cita</a></div>
+        </div>
+    </header>
+    <main>
+        <section id="inicio" class="hero">
+            <div class="container hero-grid">
+                <div class="hero-copy"><span class="pill">✓ Profesionales verificados</span>
+                    <h1>Tu salud, más cerca y más fácil.</h1>
+                    <p>Agenda tus citas médicas, encuentra especialistas y accede a nuestros servicios de salud de forma
+                        sencilla.</p>
+                    <div class="hero-buttons"><a class="btn large" href="#cita">Solicitar cita</a><a
+                            class="btn large outline" href="#servicios">Conocer nuestros servicios</a></div>
+                    <dl class="stats">
+                        <div>
+                            <dt>+45</dt>
+                            <dd>Profesionales</dd>
+                        </div>
+                        <div>
+                            <dt>20+</dt>
+                            <dd>Especialidades</dd>
+                        </div>
+                        <div>
+                            <dt>4</dt>
+                            <dd>Sedes</dd>
+                        </div>
+                    </dl>
+                </div>
+                <div class="hero-image-wrap"><img src="assets/hero-doctor.jpg"
+                        alt="Profesional de la salud sonriendo en un consultorio moderno">
+                    <div class="floating appointment"><span class="card-label">▣ Próxima
+                            cita</span><strong>Dermatología</strong><small>Dra. María Rodríguez</small>
+                        <p>◷ 18 Ago · 10:30 AM</p>
+                    </div>
+                    <div class="floating availability"><small>Disponibilidad hoy</small><strong><i></i> 12 agendas
+                            abiertas</strong>
+                        <p>★ 4.9 de satisfacción</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="servicios" class="section container">
+            <div class="intro"><span>Servicios</span>
+                <h2>Atención completa, sin trámites</h2>
+                <p>Elige el servicio que necesitas y agenda en línea con disponibilidad real.</p>
+            </div>
+            <div class="cards services">
+                <article class="card"><b class="icon">⚕</b>
+                    <h3>Medicina general</h3>
+                    <p>Consulta médica integral para diagnóstico, control y remisión a especialistas.</p><a
+                        href="#cita">Solicitar cita →</a>
+                </article>
+                <article class="card"><b class="icon">♥</b>
+                    <h3>Especialidades médicas</h3>
+                    <p>Más de 20 especialidades con profesionales verificados y agenda en línea.</p><a
+                        href="#cita">Solicitar cita →</a>
+                </article>
+                <article class="card"><b class="icon">♧</b>
+                    <h3>Laboratorio clínico</h3>
+                    <p>Toma de muestras y resultados digitales disponibles en tu cuenta.</p><a href="#cita">Solicitar
+                        cita →</a>
+                </article>
+                <article class="card"><b class="icon">☺</b>
+                    <h3>Odontología</h3>
+                    <p>Salud oral preventiva, estética y tratamientos especializados.</p><a href="#cita">Solicitar cita
+                        →</a>
+                </article>
+                <article class="card"><b class="icon">⌂</b>
+                    <h3>Atención domiciliaria</h3>
+                    <p>Valoración y cuidado profesional en casa para pacientes que lo requieren.</p><a
+                        href="#cita">Solicitar cita →</a>
+                </article>
+            </div>
+        </section>
+        <section id="especialidades" class="section shaded">
+            <div class="container">
+                <div class="section-row">
+                    <div class="intro"><span>Especialidades</span>
+                        <h2>Encuentra la atención que necesitas</h2>
+                        <p>Explora las especialidades disponibles y agenda con el profesional indicado.</p>
+                    </div><a class="btn outline" href="#">Ver todas las especialidades</a>
+                </div>
+                <div class="specialty-grid"><a class="specialty" href="#"><b>⚕</b><span><strong>Medicina
+                                general</strong><small>Primera línea de atención y control de salud.</small><em>12
+                                profesionales</em></span></a><a class="specialty"
+                        href="#"><b>✦</b><span><strong>Dermatología</strong><small>Piel, cabello y uñas.</small><em>6
+                                profesionales</em></span></a><a class="specialty"
+                        href="#"><b>♟</b><span><strong>Pediatría</strong><small>Atención para niñas y
+                                niños.</small><em>8 profesionales</em></span></a><a class="specialty"
+                        href="#"><b>♥</b><span><strong>Cardiología</strong><small>Corazón y sistema
+                                circulatorio.</small><em>5 profesionales</em></span></a><a class="specialty"
+                        href="#"><b>♀</b><span><strong>Ginecología</strong><small>Salud femenina y control
+                                prenatal.</small><em>7 profesionales</em></span></a><a class="specialty"
+                        href="#"><b>☺</b><span><strong>Odontología</strong><small>Salud oral integral.</small><em>9
+                                profesionales</em></span></a></div>
+            </div>
+        </section>
+        <section id="profesionales" class="section container">
+            <div class="section-row">
+                <div class="intro"><span>Profesionales</span>
+                    <h2>Conoce a nuestro equipo</h2>
+                    <p>Perfiles con experiencia, ubicación y disponibilidad al día.</p>
+                </div><a class="btn outline" href="#">Ver directorio</a>
+            </div>
+            <div class="cards professionals">
+                <article class="card professional">
+                    <div class="person"><b>MR</b>
+                        <div>
+                            <h3>Dra. María Rodríguez</h3><a>Dermatología</a><small>⌖ Neiva</small>
+                        </div>
+                    </div>
+                    <p class="rating">★ 4.9 <small>(128)</small><span>12 años de experiencia</span></p>
+                    <p class="next">Próxima disponibilidad: <strong>Hoy · 4:30 PM</strong></p>
+                    <div class="card-buttons"><a class="btn outline" href="#">Ver perfil</a><a class="btn"
+                            href="#cita">Agendar</a></div>
+                </article>
+                <article class="card professional">
+                    <div class="person"><b>CM</b>
+                        <div>
+                            <h3>Dr. Carlos Méndez</h3><a>Cardiología</a><small>⌖ Neiva</small>
+                        </div>
+                    </div>
+                    <p class="rating">★ 4.8 <small>(96)</small><span>15 años de experiencia</span></p>
+                    <p class="next">Próxima disponibilidad: <strong>Mañana · 9:00 AM</strong></p>
+                    <div class="card-buttons"><a class="btn outline" href="#">Ver perfil</a><a class="btn"
+                            href="#cita">Agendar</a></div>
+                </article>
+                <article class="card professional">
+                    <div class="person"><b>LC</b>
+                        <div>
+                            <h3>Dra. Laura Castro</h3><a>Pediatría</a><small>⌖ Pitalito</small>
+                        </div>
+                    </div>
+                    <p class="rating">★ 5.0 <small>(210)</small><span>10 años de experiencia</span></p>
+                    <p class="next">Próxima disponibilidad: <strong>Hoy · 6:00 PM</strong></p>
+                    <div class="card-buttons"><a class="btn outline" href="#">Ver perfil</a><a class="btn"
+                            href="#cita">Agendar</a></div>
+                </article>
+            </div>
+        </section>
+        <section id="cita" class="container">
+            <div class="cta">
+                <div>
+                    <h2>Agenda tu cita en menos de 2 minutos</h2>
+                    <ul>
+                        <li>✓ Sin llamadas</li>
+                        <li>✓ Confirmación inmediata</li>
+                        <li>✓ Recordatorios automáticos</li>
+                    </ul>
+                </div><a class="btn light large" href="#">Solicitar cita →</a>
+            </div>
+        </section>
+        <section id="faq" class="section container faq">
+            <div class="intro"><span>Ayuda</span>
+                <h2>Preguntas frecuentes</h2>
+                <p>¿Necesitas algo más? Escríbenos o usa el asistente en línea.</p><a class="btn outline"
+                    href="#contacto">Contactar</a>
+            </div>
+            <div class="accordions">
+                <details>
+                    <summary>¿Cómo agendo una cita médica?</summary>
+                    <p>Elige la especialidad, el profesional, la fecha y el horario disponible. Luego confirmas tus
+                        datos.</p>
+                </details>
+                <details>
+                    <summary>¿Necesito una cuenta para agendar?</summary>
+                    <p>Puedes iniciar sin cuenta; solo pedimos tus datos de contacto al confirmar.</p>
+                </details>
+                <details>
+                    <summary>¿Puedo cancelar o reprogramar?</summary>
+                    <p>Sí, desde Mis citas puedes hacerlo hasta 4 horas antes del horario agendado.</p>
+                </details>
+                <details>
+                    <summary>¿Atienden a domicilio?</summary>
+                    <p>Sí, contamos con atención domiciliaria para pacientes que no pueden desplazarse.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+    <footer id="contacto">
+        <div class="container footer-grid">
+            <div><a class="brand" href="#inicio"><span class="brand-mark">♥</span><span>Salud Viva</span></a>
+                <p>Plataforma de servicios de salud para agendar citas, encontrar especialistas y hacer seguimiento a tu
+                    atención.</p>
+            </div>
+            <div>
+                <h3>Plataforma</h3><a href="#servicios">Servicios</a><a href="#especialidades">Especialidades</a><a
+                    href="#profesionales">Profesionales</a><a href="#cita">Solicitar cita</a>
+            </div>
+            <div>
+                <h3>Compañía</h3><a href="#nosotros">Nosotros</a><a href="#faq">Preguntas frecuentes</a><a
+                    href="#contacto">Contacto</a><a href="#">Iniciar sesión</a>
+            </div>
+            <div>
+                <h3>Contacto</h3>
+                <p>☎ (608) 875 0000</p>
+                <p>✉ hola@saludviva.co</p>
+                <p>⌖ Calle 8 #12-45, Neiva</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <div class="container">© 2026 Salud Viva. Información con fines demostrativos, no constituye asesoría
+                médica.</div>
+        </div>
+    </footer>
+    <aside class="chat" aria-live="polite">
+        <div class="chat-head"><b>♥</b><span><strong>Asistente Salud Viva</strong><small>Responde al
+                    instante</small></span><button class="close-chat" aria-label="Cerrar chat">×</button></div>
+        <div class="chat-body">
+            <p>Hola 👋 Soy el asistente de Salud Viva. Puedo ayudarte con citas, servicios y ubicaciones.</p>
+        </div>
+        <div class="quick"><button>Agendar cita</button><button>Ver profesionales</button><button>Ver servicios</button>
+        </div>
+    </aside><button class="chat-trigger">◌ <span>¿Necesitas ayuda?</span></button>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
