@@ -1,0 +1,11 @@
+{
+  "name": "mediflow",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MediFlow — agendamiento y turnos virtuales (Clínica Previred, demostración académica)",
+  "scripts": {
+    "start": "npx --yes serve -l 8080",
+    "test:auth": "node scripts/test-auth.mjs"
+  }
+}

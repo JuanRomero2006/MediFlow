@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" data-app-root="../../">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pacientes | MediFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/layout/dashboard.css">
+  
+</head>
+<body class="dash-shell" data-page="medico:Pacientes">
+  <header class="dash-header">
+    <div class="container dash-header-inner">
+      <a class="brand" href="../../index.html"><span class="brand-mark">♥</span><span>MediFlow<span class="dash-brand-sub">Panel médico</span></span></a>
+      <div class="nav-actions">
+        <span class="dash-user" data-user-name></span>
+        <button type="button" class="btn outline small dash-menu-toggle" data-dash-menu-toggle aria-expanded="false">Menú</button>
+        <button type="button" class="btn outline small" data-logout>Salir</button>
+      </div>
+    </div>
+    <div class="container dash-mobile-nav" data-dash-mobile-nav>
+      <nav class="dash-nav" data-dashboard-nav></nav>
+    </div>
+  </header>
+  <div class="container dash-layout">
+    <aside class="dash-sidebar"><nav class="dash-nav" data-dashboard-nav></nav></aside>
+    <main class="dash-main">
+      <div id="page-alert"></div>
+      
+      <section><h1 class="dash-title">Pacientes</h1></section>
+      <section class="data-table-wrap"><table class="data-table" id="pacientes-table"><thead><tr><th>Paciente</th><th>Teléfono</th><th>Correo</th><th>Notas</th></tr></thead><tbody></tbody></table></section>
+
+    </main>
+  </div>
+  <script type="module" src="../../js/main.js"></script>
+</body>
+</html>

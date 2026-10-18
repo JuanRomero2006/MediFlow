@@ -10,6 +10,59 @@ El sistema busca facilitar el acceso de los pacientes, disminuir los tiempos de 
 
 ---
 
+## Cómo correr el proyecto
+
+> **Importante:** usa un servidor HTTP local. Si abres `index.html` con doble clic (`file://`), los módulos JavaScript **no cargarán**.
+
+### Opción A — XAMPP (recomendada en este equipo)
+
+1. Inicia **Apache** en el panel de XAMPP.
+2. Coloca el proyecto en `C:\xampp\htdocs\Proyecto` (o la ruta equivalente).
+3. Abre en el navegador:
+
+| Página | URL |
+| --- | --- |
+| Inicio | http://localhost/Proyecto/ |
+| Login | http://localhost/Proyecto/pages/login.html |
+| Agendar cita | http://localhost/Proyecto/pages/agendar.html |
+
+### Opción B — npm
+
+Desde la carpeta del proyecto:
+
+```bash
+npm start
+```
+
+Luego abre **http://localhost:8080**
+
+### Pruebas de autenticación (opcional)
+
+```bash
+npm run test:auth
+```
+
+---
+
+## Credenciales de demostración
+
+Autenticación **simulada** en el navegador (solo para la demo académica). Tras iniciar sesión, el sistema **redirige solo** al panel del rol de la cuenta (no hay selector de rol en el login).
+
+**Contraseña para todas las cuentas:** `MediFlow2026`
+
+| Rol | Correo electrónico | Usuario alternativo | Destino tras login |
+| --- | --- | --- | --- |
+| Paciente | `paciente.demo@previred.demo` | `jperez` | Panel paciente |
+| Recepción | `recepcion.demo@previred.demo` | `ctorres` | Panel recepción |
+| Médico | `medico.demo@previred.demo` | `mrodriguez` | Panel médico |
+| Administrador | `admin.demo@previred.demo` | `admin` | Panel administrador |
+
+Puedes usar **correo o nombre de usuario** en el campo «Correo o usuario» del login.
+
+Las cuentas están definidas en `data/demo-users.js`. La contraseña se valida con hash en `js/services/auth.js`; **no es un sistema seguro de producción**.
+
+---
+
 # 📋 Tabla de contenidos
 
 * [Descripción del proyecto](#-descripción-del-proyecto)
@@ -29,6 +82,8 @@ El sistema busca facilitar el acceso de los pacientes, disminuir los tiempos de 
 * [Sistema de turnos](#-sistema-de-turnos)
 * [Chatbot](#-chatbot)
 * [Organización del código](#-organización-del-código)
+* [Cómo correr el proyecto](#cómo-correr-el-proyecto)
+* [Credenciales de demostración](#credenciales-de-demostración)
 * [Instalación](#-instalación)
 * [Ejecución](#-ejecución)
 * [Buenas prácticas](#-buenas-prácticas)
@@ -1071,57 +1126,47 @@ docs: actualizar README
 
 # 🚀 Instalación
 
-## 1. Clonar el repositorio
+1. Clona o descarga el repositorio en tu máquina.
+2. Entra a la carpeta del proyecto (por ejemplo `cd Proyecto` o `cd MediFlow`).
+3. No hace falta instalar dependencias para usar XAMPP; para `npm start` solo necesitas Node.js instalado.
 
-```bash
-git clone URL_DEL_REPOSITORIO
-```
-
-## 2. Entrar al proyecto
-
-```bash
-cd MediFlow
-```
-
-## 3. Abrir el proyecto
-
-Si se trabaja inicialmente con HTML, CSS y JavaScript puro, se puede utilizar un servidor local como **Live Server**.
-
-También puede utilizarse cualquier servidor HTTP local compatible.
+Ver los pasos detallados en [Cómo correr el proyecto](#cómo-correr-el-proyecto).
 
 ---
 
 # ▶️ Ejecución
 
-La página principal se encuentra en:
+| Entorno | Comando / acción | URL base |
+| --- | --- | --- |
+| XAMPP | Apache encendido | http://localhost/Proyecto/ |
+| npm | `npm start` | http://localhost:8080 |
 
-```text
-index.html
-```
-
-El sistema debe ejecutarse mediante un servidor local para evitar problemas con rutas, módulos JavaScript y futuras peticiones.
+**Login:** `pages/login.html` · **Credenciales:** ver [Credenciales de demostración](#credenciales-de-demostración).
 
 ---
 
 # 📊 Estado del proyecto
 
-| Módulo           | Estado           |
-| ---------------- | ---------------- |
-| Página principal | 🟡 En desarrollo |
-| Servicios        | 🟡 En desarrollo |
-| Especialidades   | 🟡 En desarrollo |
-| Profesionales    | 🟡 En desarrollo |
-| Login            | 🟡 En desarrollo |
-| Agendamiento     | 🟡 En desarrollo |
-| Turnos virtuales | 🟡 En desarrollo |
-| Panel paciente   | 🟡 En desarrollo |
-| Panel recepción  | 🟡 En desarrollo |
-| Panel médico     | 🟡 En desarrollo |
-| Chatbot          | 🟡 En desarrollo |
-| Backend          | ⚪ Pendiente      |
-| Base de datos    | 🟡 Diseño        |
-| Pruebas          | ⚪ Pendiente      |
-| Despliegue       | ⚪ Pendiente      |
+| Módulo           | Estado |
+| ---------------- | ------ |
+| Página principal | 🟢 Implementada (secciones + mockup) |
+| Login y roles    | 🟢 Demostración con redirección automática |
+| Agendamiento     | 🟢 Flujo 6 pasos + localStorage |
+| Turnos virtuales | 🟢 Estados coherentes entre paneles |
+| Panel paciente   | 🟢 Dashboard, citas, turnos, perfil |
+| Panel recepción  | 🟢 Citas, pacientes, turnos |
+| Panel médico     | 🟢 Agenda, pacientes, consulta |
+| Panel administrador | 🟢 Dashboard, usuarios, configuración (demo) |
+| Chatbot          | 🟢 FAQ predefinidas (sin IA) |
+| Backend          | ⚪ Pendiente |
+| Base de datos    | 🟡 Modelo en Excel / docs |
+| Pruebas auth     | 🟢 `npm run test:auth` |
+| Despliegue       | ⚪ Pendiente |
+
+### Simulado vs pendiente
+
+- **Simulado:** autenticación, citas, turnos y sesión en `sessionStorage` / `localStorage`.
+- **Pendiente:** API, base de datos relacional, notificaciones en tiempo real, historial clínico real.
 
 ---
 

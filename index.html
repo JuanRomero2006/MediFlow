@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Agenda citas médicas, encuentra especialistas y accede a servicios de salud.">
-    <title>Salud Viva | Tu salud, más cerca y más fácil</title>
+    <title>MediFlow | Tu salud, más cerca y más fácil</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 
-<body>
+<body data-page="home">
     <header class="header">
         <nav class="container nav" aria-label="Navegación principal">
-            <a class="brand" href="#inicio"><span class="brand-mark">♥</span><span>Salud Viva</span></a>
+            <a class="brand" href="#inicio"><span class="brand-mark">♥</span><span>MediFlow</span></a>
             <div class="desktop-nav">
                 <a class="active" href="#inicio">Inicio</a>
                 <a href="#nosotros">Nosotros</a>
@@ -28,7 +28,7 @@
                 <a href="#contacto">Contacto</a>
             </div>
             <div class="nav-actions">
-                <a class="btn ghost" href="#">Iniciar sesión</a><a class="btn" href="#cita">Solicitar cita</a>
+                <a class="btn ghost" href="pages/login.html">Iniciar sesión</a><a class="btn" href="pages/agendar.html">Solicitar cita</a>
             </div><button class="menu-button" aria-expanded="false" aria-controls="mobile-menu"
                 aria-label="Abrir menú">☰</button>
         </nav>
@@ -36,8 +36,8 @@
                 href="#servicios">Servicios</a><a href="#especialidades">Especialidades</a><a
                 href="#profesionales">Profesionales</a><a href="#faq">Preguntas frecuentes</a><a
                 href="#contacto">Contacto</a>
-            <div class="mobile-actions"><a class="btn outline" href="#">Iniciar sesión</a><a class="btn"
-                    href="#cita">Solicitar cita</a></div>
+            <div class="mobile-actions"><a class="btn outline" href="pages/login.html">Iniciar sesión</a><a class="btn"
+                    href="pages/agendar.html">Solicitar cita</a></div>
         </div>
     </header>
     <main>
@@ -47,7 +47,7 @@
                     <h1>Tu salud, más cerca y más fácil.</h1>
                     <p>Agenda tus citas médicas, encuentra especialistas y accede a nuestros servicios de salud de forma
                         sencilla.</p>
-                    <div class="hero-buttons"><a class="btn large" href="#cita">Solicitar cita</a><a
+                    <div class="hero-buttons"><a class="btn large" href="pages/agendar.html">Solicitar cita</a><a
                             class="btn large outline" href="#servicios">Conocer nuestros servicios</a></div>
                     <dl class="stats">
                         <div>
@@ -64,7 +64,7 @@
                         </div>
                     </dl>
                 </div>
-                <div class="hero-image-wrap"><img src="assets/hero-doctor.jpg"
+                <div class="hero-image-wrap"><img src="assets/images/backgrounds/hero-doctor.jpg"
                         alt="Profesional de la salud sonriendo en un consultorio moderno">
                     <div class="floating appointment"><span class="card-label">▣ Próxima
                             cita</span><strong>Dermatología</strong><small>Dra. María Rodríguez</small>
@@ -77,6 +77,16 @@
                 </div>
             </div>
         </section>
+        <section id="nosotros" class="section shaded">
+            <div class="container">
+                <div class="intro"><span>Nosotros</span>
+                    <h2>Clínica Previred · Neiva, Huila</h2>
+                    <p>MediFlow es el sistema de demostración académica para digitalizar agendamiento de citas y turnos
+                        virtuales en el caso de estudio Clínica Previred. La información mostrada es ficticia y no
+                        reemplaza canales oficiales de la clínica.</p>
+                </div>
+            </div>
+        </section>
         <section id="servicios" class="section container">
             <div class="intro"><span>Servicios</span>
                 <h2>Atención completa, sin trámites</h2>
@@ -86,27 +96,27 @@
                 <article class="card"><b class="icon">⚕</b>
                     <h3>Medicina general</h3>
                     <p>Consulta médica integral para diagnóstico, control y remisión a especialistas.</p><a
-                        href="#cita">Solicitar cita →</a>
+                        href="pages/agendar.html?especialidad=medicina-general">Solicitar cita →</a>
                 </article>
                 <article class="card"><b class="icon">♥</b>
                     <h3>Especialidades médicas</h3>
                     <p>Más de 20 especialidades con profesionales verificados y agenda en línea.</p><a
-                        href="#cita">Solicitar cita →</a>
+                        href="pages/agendar.html">Solicitar cita →</a>
                 </article>
                 <article class="card"><b class="icon">♧</b>
                     <h3>Laboratorio clínico</h3>
-                    <p>Toma de muestras y resultados digitales disponibles en tu cuenta.</p><a href="#cita">Solicitar
+                    <p>Toma de muestras y resultados digitales disponibles en tu cuenta.</p><a href="pages/agendar.html">Solicitar
                         cita →</a>
                 </article>
                 <article class="card"><b class="icon">☺</b>
                     <h3>Odontología</h3>
-                    <p>Salud oral preventiva, estética y tratamientos especializados.</p><a href="#cita">Solicitar cita
+                    <p>Salud oral preventiva, estética y tratamientos especializados.</p><a href="pages/agendar.html?especialidad=odontologia">Solicitar cita
                         →</a>
                 </article>
                 <article class="card"><b class="icon">⌂</b>
                     <h3>Atención domiciliaria</h3>
                     <p>Valoración y cuidado profesional en casa para pacientes que lo requieren.</p><a
-                        href="#cita">Solicitar cita →</a>
+                        href="pages/agendar.html">Solicitar cita →</a>
                 </article>
             </div>
         </section>
@@ -116,21 +126,9 @@
                     <div class="intro"><span>Especialidades</span>
                         <h2>Encuentra la atención que necesitas</h2>
                         <p>Explora las especialidades disponibles y agenda con el profesional indicado.</p>
-                    </div><a class="btn outline" href="#">Ver todas las especialidades</a>
+                    </div><a class="btn outline" href="#especialidades">Ver todas las especialidades</a>
                 </div>
-                <div class="specialty-grid"><a class="specialty" href="#"><b>⚕</b><span><strong>Medicina
-                                general</strong><small>Primera línea de atención y control de salud.</small><em>12
-                                profesionales</em></span></a><a class="specialty"
-                        href="#"><b>✦</b><span><strong>Dermatología</strong><small>Piel, cabello y uñas.</small><em>6
-                                profesionales</em></span></a><a class="specialty"
-                        href="#"><b>♟</b><span><strong>Pediatría</strong><small>Atención para niñas y
-                                niños.</small><em>8 profesionales</em></span></a><a class="specialty"
-                        href="#"><b>♥</b><span><strong>Cardiología</strong><small>Corazón y sistema
-                                circulatorio.</small><em>5 profesionales</em></span></a><a class="specialty"
-                        href="#"><b>♀</b><span><strong>Ginecología</strong><small>Salud femenina y control
-                                prenatal.</small><em>7 profesionales</em></span></a><a class="specialty"
-                        href="#"><b>☺</b><span><strong>Odontología</strong><small>Salud oral integral.</small><em>9
-                                profesionales</em></span></a></div>
+                <div class="specialty-grid" data-specialty-grid></div>
             </div>
         </section>
         <section id="profesionales" class="section container">
@@ -138,43 +136,9 @@
                 <div class="intro"><span>Profesionales</span>
                     <h2>Conoce a nuestro equipo</h2>
                     <p>Perfiles con experiencia, ubicación y disponibilidad al día.</p>
-                </div><a class="btn outline" href="#">Ver directorio</a>
+                </div><a class="btn outline" href="#profesionales">Ver directorio</a>
             </div>
-            <div class="cards professionals">
-                <article class="card professional">
-                    <div class="person"><b>MR</b>
-                        <div>
-                            <h3>Dra. María Rodríguez</h3><a>Dermatología</a><small>⌖ Neiva</small>
-                        </div>
-                    </div>
-                    <p class="rating">★ 4.9 <small>(128)</small><span>12 años de experiencia</span></p>
-                    <p class="next">Próxima disponibilidad: <strong>Hoy · 4:30 PM</strong></p>
-                    <div class="card-buttons"><a class="btn outline" href="#">Ver perfil</a><a class="btn"
-                            href="#cita">Agendar</a></div>
-                </article>
-                <article class="card professional">
-                    <div class="person"><b>CM</b>
-                        <div>
-                            <h3>Dr. Carlos Méndez</h3><a>Cardiología</a><small>⌖ Neiva</small>
-                        </div>
-                    </div>
-                    <p class="rating">★ 4.8 <small>(96)</small><span>15 años de experiencia</span></p>
-                    <p class="next">Próxima disponibilidad: <strong>Mañana · 9:00 AM</strong></p>
-                    <div class="card-buttons"><a class="btn outline" href="#">Ver perfil</a><a class="btn"
-                            href="#cita">Agendar</a></div>
-                </article>
-                <article class="card professional">
-                    <div class="person"><b>LC</b>
-                        <div>
-                            <h3>Dra. Laura Castro</h3><a>Pediatría</a><small>⌖ Pitalito</small>
-                        </div>
-                    </div>
-                    <p class="rating">★ 5.0 <small>(210)</small><span>10 años de experiencia</span></p>
-                    <p class="next">Próxima disponibilidad: <strong>Hoy · 6:00 PM</strong></p>
-                    <div class="card-buttons"><a class="btn outline" href="#">Ver perfil</a><a class="btn"
-                            href="#cita">Agendar</a></div>
-                </article>
-            </div>
+            <div class="cards professionals" data-professionals-grid></div>
         </section>
         <section id="cita" class="container">
             <div class="cta">
@@ -185,7 +149,7 @@
                         <li>✓ Confirmación inmediata</li>
                         <li>✓ Recordatorios automáticos</li>
                     </ul>
-                </div><a class="btn light large" href="#">Solicitar cita →</a>
+                </div><a class="btn light large" href="pages/agendar.html">Solicitar cita →</a>
             </div>
         </section>
         <section id="faq" class="section container faq">
@@ -217,40 +181,39 @@
     </main>
     <footer id="contacto">
         <div class="container footer-grid">
-            <div><a class="brand" href="#inicio"><span class="brand-mark">♥</span><span>Salud Viva</span></a>
-                <p>Plataforma de servicios de salud para agendar citas, encontrar especialistas y hacer seguimiento a tu
-                    atención.</p>
+            <div><a class="brand" href="#inicio"><span class="brand-mark">♥</span><span>MediFlow</span></a>
+                <p>Sistema web de agendamiento y turnos virtuales — caso de estudio Clínica Previred (Neiva, Huila).
+                    Contenido demostrativo.</p>
             </div>
             <div>
                 <h3>Plataforma</h3><a href="#servicios">Servicios</a><a href="#especialidades">Especialidades</a><a
-                    href="#profesionales">Profesionales</a><a href="#cita">Solicitar cita</a>
+                    href="#profesionales">Profesionales</a><a href="pages/agendar.html">Solicitar cita</a>
             </div>
             <div>
                 <h3>Compañía</h3><a href="#nosotros">Nosotros</a><a href="#faq">Preguntas frecuentes</a><a
-                    href="#contacto">Contacto</a><a href="#">Iniciar sesión</a>
+                    href="#contacto">Contacto</a><a href="pages/login.html">Iniciar sesión</a>
             </div>
             <div>
                 <h3>Contacto</h3>
-                <p>☎ (608) 875 0000</p>
-                <p>✉ hola@saludviva.co</p>
-                <p>⌖ Calle 8 #12-45, Neiva</p>
+                <p>☎ (608) 000 0000 <small>(demostración)</small></p>
+                <p>✉ contacto@previred.demo</p>
+                <p>⌖ Neiva, Huila, Colombia</p>
             </div>
         </div>
         <div class="copyright">
-            <div class="container">© 2026 Salud Viva. Información con fines demostrativos, no constituye asesoría
-                médica.</div>
+            <div class="container">© 2026 MediFlow · Clínica Previred (caso de estudio). Información demostrativa, no
+                constituye asesoría médica.</div>
         </div>
     </footer>
     <aside class="chat" aria-live="polite">
-        <div class="chat-head"><b>♥</b><span><strong>Asistente Salud Viva</strong><small>Responde al
-                    instante</small></span><button class="close-chat" aria-label="Cerrar chat">×</button></div>
-        <div class="chat-body">
-            <p>Hola 👋 Soy el asistente de Salud Viva. Puedo ayudarte con citas, servicios y ubicaciones.</p>
+        <div class="chat-head"><b>♥</b><span><strong>Asistente MediFlow</strong><small>Responde al
+                    instante</small></span><button type="button" class="close-chat" aria-label="Cerrar chat">×</button></div>
+        <div class="chat-body"></div>
+        <div class="quick chat-quick"><button type="button">Agendar cita</button><button type="button">Iniciar sesión</button><button type="button">Consultar turno</button><button type="button">Ver servicios</button>
         </div>
-        <div class="quick"><button>Agendar cita</button><button>Ver profesionales</button><button>Ver servicios</button>
-        </div>
-    </aside><button class="chat-trigger">◌ <span>¿Necesitas ayuda?</span></button>
-    <script src="js/main.js"></script>
+        <form class="chat-form"><label class="sr-only" for="chat-input">Escribe tu pregunta</label><input id="chat-input" class="chat-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off"><button type="submit" class="btn small">Enviar</button></form>
+    </aside><button type="button" class="chat-trigger">◌ <span>¿Necesitas ayuda?</span></button>
+    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

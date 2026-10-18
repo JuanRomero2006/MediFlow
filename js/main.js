@@ -1,66 +1,39 @@
-document.addEventListener('DOMContentLoaded', () => {
-  initMobileMenu();
-  initChat();
-});
+const page = document.body.dataset.page;
 
-function initMobileMenu() {
-  const menuButton = document.querySelector('.menu-button');
-  const mobileMenu = document.querySelector('.mobile-menu');
-
-  if (!menuButton || !mobileMenu) return;
-
-  const closeMenu = () => {
-    mobileMenu.classList.remove('open');
-    menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.textContent = '☰';
-  };
-
-  menuButton.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.toggle('open');
-    menuButton.setAttribute('aria-expanded', String(isOpen));
-    menuButton.textContent = isOpen ? '×' : '☰';
-  });
-
-  mobileMenu.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', closeMenu);
-  });
-}
-
-function initChat() {
-  const chat = document.querySelector('.chat');
-  const chatTrigger = document.querySelector('.chat-trigger');
-  const closeButton = document.querySelector('.close-chat');
-  const chatMessageArea = document.querySelector('.chat-body');
-
-  if (!chat || !chatTrigger || !closeButton || !chatMessageArea) return;
-
-  const triggerLabel = chatTrigger.querySelector('span');
-
-  const setChatState = (isOpen) => {
-    chat.classList.toggle('open', isOpen);
-
-    if (triggerLabel) {
-      triggerLabel.textContent = isOpen ? 'Cerrar' : '¿Necesitas ayuda?';
+async function boot() {
+  switch (page) {
+    case 'home': {
+      const { initHomePage } = await import('./pages/home.js');
+      initHomePage();
+      break;
     }
-  };
-
-  chatTrigger.addEventListener('click', () => {
-    setChatState(!chat.classList.contains('open'));
-  });
-
-  closeButton.addEventListener('click', () => setChatState(false));
-
-  document.querySelectorAll('.quick button').forEach((button) => {
-    button.addEventListener('click', () => {
-      addUserMessage(chatMessageArea, button.textContent);
-    });
-  });
+    case 'login': {
+      const { initLoginPage } = await import('./pages/login.js');
+      await initLoginPage();
+      break;
+    }
+    case 'agendar': {
+      const { initAgendarPage } = await import('./pages/agendar.js');
+      await initAgendarPage();
+      break;
+    }
+    default:
+      if (page?.startsWith('paciente:')) {
+        const { initPacientePage } = await import('./pages/paciente.js');
+        await initPacientePage(page.replace('paciente:', ''));
+      } else if (page?.startsWith('recepcion:')) {
+        const { initRecepcionPage } = await import('./pages/recepcion.js');
+        await initRecepcionPage(page.replace('recepcion:', ''));
+      } else if (page?.startsWith('medico:')) {
+        const { initMedicoPage } = await import('./pages/medico.js');
+        await initMedicoPage(page.replace('medico:', ''));
+      } else if (page?.startsWith('admin:')) {
+        const { initAdminPage } = await import('./pages/administrador.js');
+        await initAdminPage(page.replace('admin:', ''));
+      }
+  }
 }
 
-function addUserMessage(messageArea, message) {
-  const userMessage = document.createElement('p');
-
-  userMessage.textContent = message;
-  userMessage.className = 'user-message';
-  messageArea.appendChild(userMessage);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  boot().catch((err) => console.error(err));
+});

@@ -1,0 +1,1903 @@
+[
+  {
+    "file": "Proyecto_base_de_datos_Clinica.xlsx",
+    "sheets": [
+      {
+        "sheet": "xl/worksheets/sheet1.xml",
+        "rows": [
+          [
+            "Situación problema"
+          ],
+          [
+            "Actualmente, la atención de pacientes en las clínicas puede generar congestión en las zonas de espera debido a la necesidad de solicitar turnos de manera presencial y permanecer en las instalaciones hasta que llegue el momento de ser atendido. Esta situación puede ocasionar largas filas, acumulación de personas, pérdida de tiempo y dificultades para organizar de manera eficiente el orden de atención."
+          ],
+          [
+            "Adicionalmente, el proceso actual no cuenta con un mecanismo digital que permita identificar de manera anticipada al usuario que ingresa al sistema (paciente o administrador), ni con una herramienta que asesore al usuario en el uso del sitio y resuelva dudas frecuentes relacionadas con la atención."
+          ],
+          [
+            "En el contexto de la Clínica Previred, ubicada en Neiva, Huila, se plantea la necesidad de mejorar el proceso de acceso, agendación y seguimiento de turnos. El sitio web de referencia ya contempla funcionalidades relacionadas con la consulta médica, como el registro de datos personales, selección de especialidad, fecha, horario y consulta del historial de citas."
+          ],
+          [
+            "A partir de esta necesidad, se propone desarrollar un sistema que permita a los pacientes acceder mediante un inicio de sesión propio, agendar y consultar su cita de manera digital, solicitar y hacer seguimiento a su turno, y contar con un chatbot que brinde asesoría al usuario en la navegación de la página y en otros temas relacionados con la atención de la clínica."
+          ],
+          [
+            "El problema central consiste en la falta de un mecanismo digital integral que permita el acceso diferenciado de usuarios, la gestión de citas y turnos, y la asesoría oportuna al usuario en la navegación del sitio y en otros temas relacionados."
+          ],
+          [
+            "Alcance del modelo: login, agendación de citas, turnos virtuales, chatbot de asesoría y panel administrativo."
+          ]
+        ]
+      },
+      {
+        "sheet": "xl/worksheets/sheet2.xml",
+        "rows": [
+          [
+            "Descripción de Entidades"
+          ],
+          [
+            "ENTIDAD",
+            "Justificación, explicación de su existencia en el Mundo del Problema",
+            "Ejemplo (datos de muestra de una instancia)",
+            "Extensión",
+            "INTENCION"
+          ],
+          [
+            "DEPARTAMENTO",
+            "División geográfica oficial de Colombia. Permite ubicar ciudades y sedes.",
+            "Huila",
+            "33",
+            "Organizar datos por región"
+          ],
+          [
+            "CIUDAD",
+            "Municipio donde se ubica una sede o reside un paciente.",
+            "Neiva",
+            "~1.100",
+            "Localización geográfica"
+          ],
+          [
+            "SEDE",
+            "Instalación física de la clínica. Necesaria porque Previred puede tener varias sedes.",
+            "Sede Centro",
+            "1–5",
+            "Ubicar citas y turnos"
+          ],
+          [
+            "USUARIO",
+            "Persona que accede al sistema. Contiene credenciales de login.",
+            "mateo@correo.com",
+            "10.000+",
+            "Autenticación y permisos"
+          ],
+          [
+            "ROL",
+            "Perfil de acceso del usuario. Define qué puede hacer dentro del sistema.",
+            "Administrador",
+            "5",
+            "Control de permisos"
+          ],
+          [
+            "USUARIO_ROL",
+            "Relación N:M entre usuarios y roles. Un usuario puede tener varios roles.",
+            "Mateo → Admin",
+            "15.000+",
+            "Asignación de perfiles"
+          ],
+          [
+            "PACIENTE",
+            "Datos clínicos y personales del paciente. Extiende a USUARIO.",
+            "Juan Pérez, CC 123",
+            "8.000",
+            "Agendación y turnos"
+          ],
+          [
+            "MEDICO",
+            "Profesional de la salud que atiende citas. Extiende a USUARIO.",
+            "Dra. Gómez",
+            "50",
+            "Atiende citas"
+          ],
+          [
+            "ESPECIALIDAD",
+            "Área médica ofrecida por la clínica.",
+            "Cardiología",
+            "15",
+            "Clasificar la atención"
+          ],
+          [
+            "MEDICO_ESPECIALIDAD",
+            "Relación N:M entre médicos y especialidades.",
+            "Dra. Gómez → Cardiología",
+            "80",
+            "Oferta médica"
+          ],
+          [
+            "HORARIO_MEDICO",
+            "Disponibilidad del médico por sede y especialidad. Base para agendar.",
+            "Lunes 08:00–12:00",
+            "300",
+            "Generar cupos"
+          ],
+          [
+            "CITA",
+            "Cita médica agendada por un paciente.",
+            "Cita 2025-03-10 09:00",
+            "20.000/año",
+            "Núcleo del negocio"
+          ],
+          [
+            "TURNO",
+            "Turno virtual generado para la atención del día.",
+            "Turno A-014",
+            "50.000/año",
+            "Ordenar la atención"
+          ],
+          [
+            "CHATBOT_TEMA",
+            "Categoría de asesoría del chatbot.",
+            "Navegación del sitio",
+            "10",
+            "Organizar respuestas"
+          ],
+          [
+            "CHATBOT_PREGUNTA",
+            "Pregunta-respuesta administrable del bot.",
+            "\"¿Cómo agendo una cita?\"",
+            "100",
+            "Base de conocimiento"
+          ],
+          [
+            "CONVERSACION_CHATBOT",
+            "Sesión de chat entre usuario y bot.",
+            "Conv #4521",
+            "5.000/mes",
+            "Registrar uso del bot"
+          ],
+          [
+            "MENSAJE_CHATBOT",
+            "Mensaje individual dentro de una conversación.",
+            "\"Hola\" / \"Bienvenido\"",
+            "30.000/mes",
+            "Detalle de la charla"
+          ],
+          [
+            "NOTIFICACION",
+            "Aviso enviado al usuario.",
+            "\"Su turno está próximo\"",
+            "60.000/año",
+            "Comunicación"
+          ],
+          [
+            "BITACORA",
+            "Registro de acciones del sistema.",
+            "Login exitoso",
+            "100.000/año",
+            "Auditoría"
+          ],
+          [
+            "REGLA_NEGOCIO",
+            "Parámetros configurables del sistema.",
+            "\"Máx. 1 cita activa/día\"",
+            "30",
+            "Separar reglas del código"
+          ]
+        ]
+      },
+      {
+        "sheet": "xl/worksheets/sheet3.xml",
+        "rows": [
+          [
+            "Descripción de atributos y sus restricciones naturales (Tipo de Dato) y restricciones adicionales, Dominios (Lista de Valores, Rangos de Valores y Restricciones generales)"
+          ],
+          [
+            "Nombre Entidad",
+            "Atributos",
+            "Llave Primaria (PK)",
+            "Llave Foránea (FK)",
+            "Entidad con la cual es llave foránea",
+            "Nombre dominio (para los atributos que aplica un dominio)",
+            "Tipo de Dato (Texto, Número, Fecha)",
+            "Tamaño",
+            "Obligatoriedad (Si/No)",
+            "Cardinalidad",
+            "Restricciones adicionales"
+          ],
+          [
+            "(1 o Muchos)",
+            "Lista de Valores (Cuando existe un dominio)",
+            "Rango de Valores (Cuando existe un dominio)",
+            "Restricción general (cuando aplique para un atributo)"
+          ],
+          [
+            "DEPARTAMENTO",
+            "departamento_id",
+            "x",
+            "varchar",
+            "5",
+            "si",
+            "Código DANE"
+          ],
+          [
+            "nombre",
+            "varchar",
+            "100",
+            "si",
+            "Único"
+          ],
+          [
+            "estado",
+            "estado_geo",
+            "enum",
+            "si",
+            "Activo,Inactivo",
+            "Default 'Activo'"
+          ],
+          [
+            "CIUDAD",
+            "ciudad_id",
+            "x",
+            "varchar",
+            "5",
+            "si",
+            "Código DANE"
+          ],
+          [
+            "nombre",
+            "varchar",
+            "100",
+            "si"
+          ],
+          [
+            "departamento_id",
+            "x",
+            "DEPARTAMENTO",
+            "varchar",
+            "5",
+            "si",
+            "1..*"
+          ],
+          [
+            "estado",
+            "estado_geo",
+            "enum",
+            "si",
+            "Activo,Inactivo",
+            "Default 'Activo'"
+          ],
+          [
+            "SEDE",
+            "sede_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "nombre",
+            "varchar",
+            "150",
+            "si",
+            "Único por ciudad"
+          ],
+          [
+            "direccion",
+            "varchar",
+            "200",
+            "si"
+          ],
+          [
+            "ciudad_id",
+            "x",
+            "CIUDAD",
+            "varchar",
+            "5",
+            "si",
+            "1..*",
+            "Ciudad activa"
+          ],
+          [
+            "telefono",
+            "varchar",
+            "20",
+            "no"
+          ],
+          [
+            "email",
+            "varchar",
+            "120",
+            "no",
+            "Formato correo"
+          ],
+          [
+            "fecha_apertura",
+            "date",
+            "no"
+          ],
+          [
+            "activo",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 1"
+          ],
+          [
+            "USUARIO",
+            "usuario_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "tipo_documento",
+            "tipo_doc",
+            "enum",
+            "si",
+            "CC,CE,TI,PP,NIT"
+          ],
+          [
+            "numero_documento",
+            "varchar",
+            "30",
+            "si",
+            "Único"
+          ],
+          [
+            "nombres",
+            "varchar",
+            "100",
+            "si"
+          ],
+          [
+            "apellidos",
+            "varchar",
+            "100",
+            "si"
+          ],
+          [
+            "email",
+            "varchar",
+            "120",
+            "si",
+            "Único, formato correo"
+          ],
+          [
+            "telefono",
+            "varchar",
+            "20",
+            "no"
+          ],
+          [
+            "password_hash",
+            "varchar",
+            "255",
+            "si",
+            "Almacenamiento seguro"
+          ],
+          [
+            "estado",
+            "estado_usuario",
+            "enum",
+            "si",
+            "activo,inactivo,suspendido",
+            "Default 'activo'"
+          ],
+          [
+            "fecha_registro",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "ultimo_acceso",
+            "datetime",
+            "no",
+            "Se actualiza en login"
+          ],
+          [
+            "ROL",
+            "rol_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "nombre",
+            "nombre_rol",
+            "enum",
+            "si",
+            "paciente,medico,recepcionista,administrador,superadmin",
+            "Único"
+          ],
+          [
+            "descripcion",
+            "varchar",
+            "255",
+            "no"
+          ],
+          [
+            "USUARIO_ROL",
+            "usuario_id",
+            "x",
+            "x",
+            "USUARIO",
+            "int",
+            "si",
+            "1..*",
+            "PK compuesta"
+          ],
+          [
+            "rol_id",
+            "x",
+            "x",
+            "ROL",
+            "int",
+            "si",
+            "1..*",
+            "PK compuesta"
+          ],
+          [
+            "fecha_asignacion",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "PACIENTE",
+            "paciente_id",
+            "x",
+            "x",
+            "USUARIO",
+            "int",
+            "si",
+            "1",
+            "Extiende USUARIO"
+          ],
+          [
+            "fecha_nacimiento",
+            "date",
+            "no",
+            "No puede ser futura"
+          ],
+          [
+            "sexo",
+            "sexo",
+            "enum",
+            "no",
+            "M,F,O"
+          ],
+          [
+            "direccion",
+            "varchar",
+            "200",
+            "no"
+          ],
+          [
+            "ciudad_id",
+            "x",
+            "CIUDAD",
+            "varchar",
+            "5",
+            "no",
+            "1..*"
+          ],
+          [
+            "eps",
+            "varchar",
+            "100",
+            "no"
+          ],
+          [
+            "tipo_sangre",
+            "tipo_sangre",
+            "enum",
+            "no",
+            "O+,O-,A+,A-,B+,B-,AB+,AB-"
+          ],
+          [
+            "alergias",
+            "text",
+            "no"
+          ],
+          [
+            "antecedentes",
+            "text",
+            "no"
+          ],
+          [
+            "MEDICO",
+            "medico_id",
+            "x",
+            "x",
+            "USUARIO",
+            "int",
+            "si",
+            "1",
+            "Extiende USUARIO"
+          ],
+          [
+            "registro_medico",
+            "varchar",
+            "50",
+            "si",
+            "Único"
+          ],
+          [
+            "telefono_consultorio",
+            "varchar",
+            "20",
+            "no"
+          ],
+          [
+            "activo",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 1"
+          ],
+          [
+            "ESPECIALIDAD",
+            "especialidad_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "nombre",
+            "varchar",
+            "100",
+            "si",
+            "Único"
+          ],
+          [
+            "descripcion",
+            "varchar",
+            "255",
+            "no"
+          ],
+          [
+            "activo",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 1"
+          ],
+          [
+            "MEDICO_ESPECIALIDAD",
+            "medico_id",
+            "x",
+            "x",
+            "MEDICO",
+            "int",
+            "si",
+            "1..*",
+            "PK compuesta"
+          ],
+          [
+            "especialidad_id",
+            "x",
+            "x",
+            "ESPECIALIDAD",
+            "int",
+            "si",
+            "1..*",
+            "PK compuesta"
+          ],
+          [
+            "es_principal",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 0"
+          ],
+          [
+            "HORARIO_MEDICO",
+            "horario_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "medico_id",
+            "x",
+            "MEDICO",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "sede_id",
+            "x",
+            "SEDE",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "especialidad_id",
+            "x",
+            "ESPECIALIDAD",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "dia_semana",
+            "dia_semana",
+            "enum",
+            "si",
+            "Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo"
+          ],
+          [
+            "hora_inicio",
+            "time",
+            "si"
+          ],
+          [
+            "hora_fin",
+            "time",
+            "si",
+            "Debe ser > hora_inicio"
+          ],
+          [
+            "duracion_cita_min",
+            "int",
+            "si",
+            "≥ 5",
+            "Default 30"
+          ],
+          [
+            "cupo_maximo",
+            "int",
+            "si",
+            "≥ 1",
+            "Default 1"
+          ],
+          [
+            "activo",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 1 | UNIQUE(medico_id, sede_id, dia_semana, hora_inicio)"
+          ],
+          [
+            "CITA",
+            "cita_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "paciente_id",
+            "x",
+            "PACIENTE",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "medico_id",
+            "x",
+            "MEDICO",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "especialidad_id",
+            "x",
+            "ESPECIALIDAD",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "sede_id",
+            "x",
+            "SEDE",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "horario_id",
+            "x",
+            "HORARIO_MEDICO",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "fecha_cita",
+            "date",
+            "si",
+            "No puede ser pasada al crear"
+          ],
+          [
+            "hora_cita",
+            "time",
+            "si"
+          ],
+          [
+            "duracion_min",
+            "int",
+            "si",
+            "≥ 5",
+            "Default 30"
+          ],
+          [
+            "estado",
+            "estado_cita",
+            "enum",
+            "si",
+            "agendada,confirmada,cancelada,atendida,no_asistio",
+            "Default 'agendada'"
+          ],
+          [
+            "motivo",
+            "varchar",
+            "255",
+            "no"
+          ],
+          [
+            "observaciones",
+            "text",
+            "no"
+          ],
+          [
+            "fecha_creacion",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "creada_por_usuario_id",
+            "x",
+            "USUARIO",
+            "int",
+            "no",
+            "1..*",
+            "UNIQUE(medico_id, fecha_cita, hora_cita)"
+          ],
+          [
+            "TURNO",
+            "turno_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "cita_id",
+            "x",
+            "CITA",
+            "int",
+            "no",
+            "1",
+            "Puede existir sin cita"
+          ],
+          [
+            "paciente_id",
+            "x",
+            "PACIENTE",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "sede_id",
+            "x",
+            "SEDE",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "numero_turno",
+            "varchar",
+            "10",
+            "si",
+            "Único por sede/fecha"
+          ],
+          [
+            "fecha_turno",
+            "date",
+            "si"
+          ],
+          [
+            "hora_generacion",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "hora_llamado",
+            "datetime",
+            "no"
+          ],
+          [
+            "hora_atencion",
+            "datetime",
+            "no"
+          ],
+          [
+            "estado",
+            "estado_turno",
+            "enum",
+            "si",
+            "generado,en_espera,llamado,en_atencion,atendido,cancelado,no_presento",
+            "Default 'generado'"
+          ],
+          [
+            "prioridad",
+            "int",
+            "si",
+            "≥ 0",
+            "Default 0"
+          ],
+          [
+            "modulo",
+            "varchar",
+            "50",
+            "no",
+            "Consultorio o ventanilla"
+          ],
+          [
+            "observaciones",
+            "varchar",
+            "255",
+            "no",
+            "UNIQUE(sede_id, fecha_turno, numero_turno)"
+          ],
+          [
+            "CHATBOT_TEMA",
+            "tema_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "nombre",
+            "varchar",
+            "100",
+            "si",
+            "Único"
+          ],
+          [
+            "descripcion",
+            "varchar",
+            "255",
+            "no"
+          ],
+          [
+            "activo",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 1"
+          ],
+          [
+            "CHATBOT_PREGUNTA",
+            "pregunta_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "tema_id",
+            "x",
+            "CHATBOT_TEMA",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "pregunta",
+            "text",
+            "si"
+          ],
+          [
+            "respuesta",
+            "text",
+            "si"
+          ],
+          [
+            "palabras_clave",
+            "varchar",
+            "255",
+            "no",
+            "Separadas por coma"
+          ],
+          [
+            "prioridad",
+            "int",
+            "si",
+            "≥ 1",
+            "Default 1"
+          ],
+          [
+            "activo",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 1"
+          ],
+          [
+            "fecha_actualizacion",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "actualizado_por_usuario_id",
+            "x",
+            "USUARIO",
+            "int",
+            "no",
+            "1..*"
+          ],
+          [
+            "CONVERSACION_CHATBOT",
+            "conversacion_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "usuario_id",
+            "x",
+            "USUARIO",
+            "int",
+            "no",
+            "1..*",
+            "Puede ser anónima"
+          ],
+          [
+            "fecha_inicio",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "fecha_fin",
+            "datetime",
+            "no"
+          ],
+          [
+            "canal",
+            "canal_chat",
+            "enum",
+            "si",
+            "web,app,whatsapp",
+            "Default 'web'"
+          ],
+          [
+            "MENSAJE_CHATBOT",
+            "mensaje_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "conversacion_id",
+            "x",
+            "CONVERSACION_CHATBOT",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "emisor",
+            "emisor",
+            "enum",
+            "si",
+            "usuario,bot"
+          ],
+          [
+            "mensaje",
+            "text",
+            "si"
+          ],
+          [
+            "fecha_hora",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "intencion_detectada",
+            "varchar",
+            "100",
+            "no"
+          ],
+          [
+            "pregunta_id",
+            "x",
+            "CHATBOT_PREGUNTA",
+            "int",
+            "no",
+            "1",
+            "Cuando el bot responde"
+          ],
+          [
+            "metadata",
+            "json",
+            "no",
+            "Info adicional"
+          ],
+          [
+            "NOTIFICACION",
+            "notificacion_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "usuario_id",
+            "x",
+            "USUARIO",
+            "int",
+            "si",
+            "1..*"
+          ],
+          [
+            "tipo",
+            "tipo_notif",
+            "enum",
+            "si",
+            "cita,turno,chatbot,sistema,recordatorio"
+          ],
+          [
+            "titulo",
+            "varchar",
+            "100",
+            "si"
+          ],
+          [
+            "mensaje",
+            "text",
+            "si"
+          ],
+          [
+            "fecha_envio",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "leida",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 0"
+          ],
+          [
+            "canal",
+            "canal_notif",
+            "enum",
+            "si",
+            "app,email,sms,push",
+            "Default 'app'"
+          ],
+          [
+            "prioridad",
+            "prioridad",
+            "enum",
+            "si",
+            "baja,media,alta,urgente",
+            "Default 'media'"
+          ],
+          [
+            "BITACORA",
+            "bitacora_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "usuario_id",
+            "x",
+            "USUARIO",
+            "int",
+            "no",
+            "1..*",
+            "Puede ser sistema"
+          ],
+          [
+            "accion",
+            "varchar",
+            "150",
+            "si"
+          ],
+          [
+            "tabla_afectada",
+            "varchar",
+            "50",
+            "no"
+          ],
+          [
+            "registro_id",
+            "int",
+            "no",
+            "ID afectado"
+          ],
+          [
+            "detalle",
+            "text",
+            "no"
+          ],
+          [
+            "fecha_hora",
+            "datetime",
+            "si",
+            "Default CURRENT_TIMESTAMP"
+          ],
+          [
+            "ip_origen",
+            "varchar",
+            "45",
+            "no"
+          ],
+          [
+            "REGLA_NEGOCIO",
+            "regla_id",
+            "x",
+            "int",
+            "si",
+            "Auto incremento"
+          ],
+          [
+            "nombre",
+            "varchar",
+            "100",
+            "si"
+          ],
+          [
+            "tipo",
+            "tipo_regla",
+            "enum",
+            "si",
+            "cita,turno,chatbot,acceso,notificacion"
+          ],
+          [
+            "valor",
+            "varchar",
+            "255",
+            "si",
+            "Parámetro configurable"
+          ],
+          [
+            "descripcion",
+            "varchar",
+            "255",
+            "no"
+          ],
+          [
+            "activo",
+            "booleano",
+            "tinyint",
+            "1",
+            "si",
+            "0,1",
+            "Default 1"
+          ]
+        ]
+      },
+      {
+        "sheet": "xl/worksheets/sheet4.xml",
+        "rows": [
+          [
+            "Link Diagrama: ",
+            "(pendiente — insertar enlace a Lucidchart o similar)"
+          ],
+          [
+            "Sugerencia: reemplazar el enlace anterior del gimnasio por uno nuevo generado a partir del diagrama Mermaid de la hoja 6."
+          ]
+        ]
+      },
+      {
+        "sheet": "xl/worksheets/sheet5.xml",
+        "rows": [
+          [
+            "Matriz de Relaciones"
+          ],
+          [
+            "USUARIO",
+            "ROL",
+            "PACIENTE",
+            "MEDICO",
+            "ESPECIALIDAD",
+            "SEDE",
+            "HORARIO_MEDICO",
+            "CITA",
+            "TURNO",
+            "CHATBOT_TEMA",
+            "CHATBOT_PREGUNTA",
+            "CONVERSACION",
+            "MENSAJE",
+            "NOTIFICACION",
+            "BITACORA"
+          ],
+          [
+            "USUARIO",
+            "-",
+            "*",
+            "1",
+            "1",
+            "-",
+            "-",
+            "-",
+            "1..*",
+            "-",
+            "-",
+            "1..*",
+            "1..*",
+            "-",
+            "1..*",
+            "1..*"
+          ],
+          [
+            "ROL",
+            "*",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "PACIENTE",
+            "1",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "1..*",
+            "1..*",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "MEDICO",
+            "1",
+            "-",
+            "-",
+            "-",
+            "*",
+            "-",
+            "1..*",
+            "1..*",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "ESPECIALIDAD",
+            "-",
+            "-",
+            "-",
+            "*",
+            "-",
+            "-",
+            "1..*",
+            "1..*",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "SEDE",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "1..*",
+            "1..*",
+            "1..*",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "HORARIO_MEDICO",
+            "-",
+            "-",
+            "-",
+            "1",
+            "1",
+            "1",
+            "-",
+            "1..*",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "CITA",
+            "-",
+            "-",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "-",
+            "1",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "TURNO",
+            "-",
+            "-",
+            "1",
+            "-",
+            "-",
+            "1",
+            "-",
+            "1",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "CHATBOT_TEMA",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "1..*",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "CHATBOT_PREGUNTA",
+            "1",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "1",
+            "-",
+            "-",
+            "1..*",
+            "-",
+            "-"
+          ],
+          [
+            "CONVERSACION",
+            "1",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "1..*",
+            "-",
+            "-"
+          ],
+          [
+            "MENSAJE",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "1",
+            "1",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "NOTIFICACION",
+            "1",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "BITACORA",
+            "1",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "Convenciones:"
+          ],
+          [
+            "-  →  No hay relación"
+          ],
+          [
+            "1  →  Uno a uno"
+          ],
+          [
+            "1..*  →  Uno a muchos"
+          ],
+          [
+            "*  →  Muchos a muchos"
+          ],
+          [
+            "La fila indica la entidad de origen; la columna, la entidad destino."
+          ],
+          [
+            "Ejemplo de lectura: un PACIENTE puede tener una o varias CITAS (1..*), pero una CITA pertenece a un solo PACIENTE (1)."
+          ],
+          [
+            "Nota sobre USUARIO–ROL: la relación muchos a muchos se resuelve con la tabla intermedia USUARIO_ROL."
+          ],
+          [
+            "Nota sobre MEDICO–ESPECIALIDAD: la relación muchos a muchos se resuelve con la tabla intermedia MEDICO_ESPECIALIDAD."
+          ]
+        ]
+      },
+      {
+        "sheet": "xl/worksheets/sheet6.xml",
+        "rows": [
+          [
+            "Pegue aquí opcionalmente la imagen de su modelo E-R"
+          ]
+        ]
+      },
+      {
+        "sheet": "xl/worksheets/sheet7.xml",
+        "rows": [
+          [
+            "Codigo",
+            "Apellidos",
+            "nombres"
+          ],
+          [
+            "u20242226684",
+            "Tafur Piedrahita",
+            "Mateo"
+          ],
+          [
+            "u20242228175",
+            "Perdomo Quimbaya",
+            "David Julian"
+          ],
+          [
+            "Descripción de la mayor dificultad que encontraron en el desarrollo."
+          ],
+          [
+            "Escriba los logros alcanzados con el desarrollo del trabajo "
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "Planeacion Proyecto Turnos Virtuales Clinica.xlsx",
+    "sheets": [
+      {
+        "sheet": "xl/worksheets/sheet1.xml",
+        "rows": [
+          [
+            "ID",
+            "Fase",
+            "Actividad",
+            "Descripción",
+            "Responsable",
+            "Duración (días)",
+            "Semana",
+            "Dependencia",
+            "Entregable",
+            "Estado",
+            "% Avance"
+          ],
+          [
+            "1.0",
+            "Inicio",
+            "Definir alcance",
+            "Precisar los módulos que cubrirá el sistema: login, agendación de citas, turnos virtuales y chatbot de asesoría para la navegación del sitio y otros temas relacionados, junto con sus usuarios (paciente y administrador).",
+            "Equipo del proyecto",
+            "2.0",
+            "Semana 1",
+            "-",
+            "Alcance definido",
+            "Terminado",
+            "1.0"
+          ],
+          [
+            "2.0",
+            "Análisis",
+            "Levantamiento de requisitos",
+            "Identificar necesidades de pacientes, personal de recepción, administradores y requerimientos funcionales del chatbot de asesoría.",
+            "Analista",
+            "4.0",
+            "Semana 1",
+            "1",
+            "Requisitos funcionales y no funcionales",
+            "Terminado",
+            "1.0"
+          ],
+          [
+            "3.0",
+            "Análisis",
+            "Modelar proceso actual",
+            "Documentar cómo se solicitan, asignan y atienden actualmente las citas y los turnos en la clínica.",
+            "Analista",
+            "3.0",
+            "Semana 2",
+            "2",
+            "Diagrama del proceso actual",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "4.0",
+            "Análisis",
+            "Definir temas de asesoría del chatbot",
+            "Establecer las preguntas frecuentes y temas que el chatbot debe resolver: navegación del sitio (login, agendar cita, consultar turno) y otros temas relacionados con la atención de la clínica.",
+            "Analista",
+            "3.0",
+            "Semana 2",
+            "2",
+            "Guion de asesoría del chatbot",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "5.0",
+            "Diseño",
+            "Diseño de arquitectura",
+            "Definir componentes del sistema, usuarios, módulos (login, citas, turnos, chatbot) y comunicación con la base de datos.",
+            "Arquitecto/Desarrollador",
+            "3.0",
+            "Semana 3",
+            "3,4",
+            "Arquitectura propuesta",
+            "Terminado",
+            "1.0"
+          ],
+          [
+            "6.0",
+            "Diseño",
+            "Diseño de interfaz de usuario",
+            "Crear las pantallas de login, agendación de citas y consulta de turnos.",
+            "Diseñador/Frontend",
+            "5.0",
+            "Semana 3",
+            "5",
+            "Prototipo de interfaz de usuario",
+            "Terminado",
+            "1.0"
+          ],
+          [
+            "7.0",
+            "Diseño",
+            "Diseño de interfaz del chatbot",
+            "Crear el diseño del asistente de asesoría (ventana de chat, opciones y respuestas guiadas) visible para el usuario en el sitio.",
+            "Diseñador/Frontend",
+            "4.0",
+            "Semana 4",
+            "5",
+            "Prototipo del chatbot de asesoría",
+            "Terminado",
+            "1.0"
+          ],
+          [
+            "8.0",
+            "Base de datos",
+            "Diseño de base de datos",
+            "Definir tablas para usuarios, citas, turnos y contenido de asesoría (preguntas y respuestas) del chatbot.",
+            "Backend/BD",
+            "4.0",
+            "Semana 4",
+            "5",
+            "Modelo entidad-relación",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "9.0",
+            "Desarrollo",
+            "Módulo de login y autenticación",
+            "Implementar el registro e inicio de sesión de pacientes y administradores.",
+            "Desarrollador",
+            "5.0",
+            "Semana 5",
+            "8",
+            "Módulo de login",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "10.0",
+            "Desarrollo",
+            "Módulo de agendación de citas",
+            "Implementar la selección de especialidad, fecha y horario para agendar citas web.",
+            "Desarrollador",
+            "6.0",
+            "Semana 6",
+            "9",
+            "Módulo de agendación de citas",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "11.0",
+            "Desarrollo",
+            "Módulo de turnos virtuales",
+            "Implementar generación, numeración, estado y actualización de turnos.",
+            "Desarrollador",
+            "6.0",
+            "Semana 7",
+            "9",
+            "Módulo de turnos virtuales",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "12.0",
+            "Desarrollo",
+            "Módulo del chatbot de asesoría",
+            "Implementar el chatbot que asesore al usuario sobre la navegación del sitio (login, agendar citas, consultar turnos) y otros temas relacionados con la atención de la clínica.",
+            "Desarrollador",
+            "5.0",
+            "Semana 8",
+            "9,10,11",
+            "Chatbot de asesoría",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "13.0",
+            "Desarrollo",
+            "Módulo administrativo",
+            "Permitir al personal autorizado gestionar citas, turnos y actualizar el contenido de asesoría del chatbot.",
+            "Desarrollador",
+            "5.0",
+            "Semana 9",
+            "10,11,12",
+            "Panel administrativo",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "14.0",
+            "Integración",
+            "Integrar módulos",
+            "Conectar login, agendación de citas, turnos virtuales, chatbot de asesoría y panel administrativo.",
+            "Equipo de desarrollo",
+            "4.0",
+            "Semana 10",
+            "9,10,11,12,13",
+            "Sistema integrado",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "15.0",
+            "Pruebas",
+            "Pruebas funcionales",
+            "Validar login, agendación de citas, turnos y respuestas del chatbot de asesoría.",
+            "QA/Equipo",
+            "4.0",
+            "Semana 11",
+            "14",
+            "Informe de pruebas",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "16.0",
+            "Pruebas",
+            "Corrección de errores",
+            "Resolver errores encontrados durante las pruebas.",
+            "Desarrollador",
+            "3.0",
+            "Semana 12",
+            "15",
+            "Versión corregida",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "17.0",
+            "Implementación",
+            "Prueba piloto",
+            "Realizar una prueba controlada del sistema con usuarios representativos.",
+            "Equipo del proyecto",
+            "4.0",
+            "Semana 13",
+            "16",
+            "Resultados de prueba piloto",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "18.0",
+            "Cierre",
+            "Documentación técnica",
+            "Preparar manual básico y documentación técnica del sistema.",
+            "Equipo del proyecto",
+            "4.0",
+            "Semana 14",
+            "17",
+            "Documentación técnica",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "19.0",
+            "Cierre",
+            "Entrega final",
+            "Preparar presentación final y realizar la entrega del proyecto.",
+            "Equipo del proyecto",
+            "3.0",
+            "Semana 15",
+            "18",
+            "Proyecto entregado",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "20.0",
+            "Cierre",
+            "Documentación técnica",
+            "Preparar manual básico y documentación técnica del sistema.",
+            "Equipo del proyecto",
+            "4.0",
+            "Semana 14",
+            "19",
+            "Documentación técnica",
+            "Pendiente",
+            "0.0"
+          ],
+          [
+            "21.0",
+            "Cierre",
+            "Entrega final",
+            "Preparar presentación final y realizar la entrega del proyecto.",
+            "Equipo del proyecto",
+            "3.0",
+            "Semana 15",
+            "20",
+            "Proyecto entregado",
+            "Pendiente",
+            "0.0"
+          ]
+        ]
+      },
+      {
+        "sheet": "xl/worksheets/sheet2.xml",
+        "rows": [
+          [
+            "Proyecto",
+            "Sistema de login, agendación de citas, turnos virtuales y bot de orientación de síntomas para una clínica"
+          ],
+          [
+            "Objetivo",
+            "Digitalizar el acceso, la agendación de citas, el seguimiento de turnos y la orientación temprana del paciente mediante un bot de síntomas, para reducir esperas presenciales y organizar la atención."
+          ],
+          [
+            "Duración estimada",
+            "15 semanas"
+          ],
+          [
+            "Fases",
+            "Inicio, Análisis, Diseño, Base de datos, Desarrollo, Integración, Pruebas, Implementación y Cierre"
+          ],
+          [
+            "Entregable final",
+            "Sistema funcional (login, agendación de citas, turnos virtuales y bot de síntomas) + documentación"
+          ]
+        ]
+      }
+    ]
+  }
+]

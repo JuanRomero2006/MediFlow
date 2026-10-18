@@ -1,0 +1,183 @@
+.agendar-page {
+    padding: 32px 0 64px
+}
+
+.stepper {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px
+}
+
+.stepper li {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 10px;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center
+}
+
+.stepper li span {
+    width: 18px;
+    height: 18px;
+    border-radius: 99px;
+    display: grid;
+    place-items: center;
+    background: #eef3f4;
+    font-size: 10px
+}
+
+.stepper li.active,
+.stepper li.done {
+    color: var(--primary);
+    border-color: #c5e7ea;
+    background: var(--soft)
+}
+
+.agendar-panel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px;
+    min-height: 220px
+}
+
+.agendar-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px
+}
+
+.choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px
+}
+
+.choice-card {
+    text-align: left;
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px;
+    cursor: pointer
+}
+
+.choice-card.selected {
+    border-color: var(--primary);
+    background: var(--soft)
+}
+
+.choice-card strong {
+    display: block;
+    margin-top: 6px
+}
+
+.choice-card small,
+.choice-card em {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: normal
+}
+
+.date-grid,
+.slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 10px
+}
+
+.date-card,
+.slot {
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px;
+    cursor: pointer
+}
+
+.date-card.selected,
+.slot.selected {
+    border-color: var(--primary);
+    background: var(--soft)
+}
+
+.date-card strong {
+    display: block;
+    font-size: 20px
+}
+
+.slot[disabled] {
+    opacity: .55;
+    cursor: not-allowed
+}
+
+.form-grid {
+    display: grid;
+    gap: 14px
+}
+
+.form-grid label {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600
+}
+
+.form-grid input {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font: inherit
+}
+
+.summary-card ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 14px
+}
+
+.success-panel {
+    text-align: center;
+    padding: 24px 12px
+}
+
+.chat-form {
+    display: flex;
+    gap: 6px;
+    padding: 10px;
+    border-top: 1px solid var(--line)
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font: inherit
+}
+
+.user-message {
+    background: var(--primary) !important;
+    color: #fff !important;
+    margin-left: auto;
+    max-width: 85%;
+    border-top-right-radius: 3px !important
+}
+
+@media (max-width: 720px) {
+    .choice-grid {
+        grid-template-columns: 1fr
+    }
+}

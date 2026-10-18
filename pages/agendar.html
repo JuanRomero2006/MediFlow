@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" data-app-root="../">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar cita | MediFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/pages/agendar.css">
+</head>
+
+<body data-page="agendar">
+    <header class="header">
+        <nav class="container nav" aria-label="Navegación">
+            <a class="brand" href="../index.html"><span class="brand-mark">♥</span><span>MediFlow</span></a>
+            <div class="nav-actions">
+                <a class="btn ghost" href="../index.html">Inicio</a>
+                <a class="btn ghost" href="login.html">Iniciar sesión</a>
+            </div>
+        </nav>
+    </header>
+    <main class="container agendar-page">
+        <h1 class="dash-title">Agendar cita médica</h1>
+        <p class="dash-subtitle">Proceso guiado en 6 pasos · datos de demostración local.</p>
+        <div id="agendar-alert"></div>
+        <ol class="stepper" id="stepper"></ol>
+        <div class="agendar-panel" id="step-panel"></div>
+        <div class="agendar-actions">
+            <button type="button" class="btn outline" id="btn-back">Atrás</button>
+            <button type="button" class="btn" id="btn-next">Continuar</button>
+        </div>
+    </main>
+    <aside class="chat" aria-live="polite">
+        <div class="chat-head"><b>♥</b><span><strong>Asistente MediFlow</strong><small>Versión inicial</small></span><button
+                class="close-chat" aria-label="Cerrar chat">×</button></div>
+        <div class="chat-body"></div>
+        <div class="quick chat-quick"><button>Agendar cita</button><button>Iniciar sesión</button><button>Consultar
+                turno</button><button>Ver servicios</button></div>
+        <form class="chat-form"><input class="chat-input" type="text" placeholder="Escribe tu pregunta..."
+                aria-label="Mensaje"><button class="btn small" type="submit">Enviar</button></form>
+    </aside>
+    <button class="chat-trigger" type="button">◌ <span>¿Necesitas ayuda?</span></button>
+    <script type="module" src="../js/main.js"></script>
+</body>
+
+</html>

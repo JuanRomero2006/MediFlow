@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" data-app-root="../">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | MediFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/pages/login.css">
+</head>
+
+<body data-page="login">
+    <header class="login-topbar">
+        <a class="login-back" href="../index.html"><span aria-hidden="true">←</span> Volver a la página principal</a>
+    </header>
+    <div class="login-page">
+        <div class="login-panel">
+            <div class="login-form-wrap">
+                <a class="brand" href="../index.html"><span class="brand-mark">♥</span><span>MediFlow</span></a>
+                <div class="login-card">
+                <h1>Ingresa a tu cuenta</h1>
+                <p class="login-lead">El sistema te redirigirá al panel según el rol de tu cuenta.</p>
+                <div id="login-alert"></div>
+                <form id="login-form" novalidate>
+                    <div class="form-field">
+                        <label for="identifier">Correo o usuario</label>
+                        <input id="identifier" name="identifier" autocomplete="username" required
+                            placeholder="paciente.demo@previred.demo">
+                    </div>
+                    <div class="form-field">
+                        <label for="password">Contraseña</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required>
+                    </div>
+                    <button id="login-submit" class="btn large login-submit" type="submit">Iniciar sesión</button>
+                </form>
+                <p class="demo-note">Autenticación simulada para demostración académica. No constituye un sistema
+                    seguro de producción. Consulta el README para cuentas de prueba.</p>
+                </div>
+                <p class="login-footer-links">
+                    <a href="../index.html">Página principal</a>
+                    <span aria-hidden="true">·</span>
+                    <a href="agendar.html">Agendar cita sin cuenta</a>
+                </p>
+            </div>
+        </div>
+        <aside class="login-aside">
+            <div class="login-aside-inner">
+                <span class="login-aside-badge">Clínica Previred</span>
+                <h2>Tu salud, organizada en un solo lugar</h2>
+                <p class="login-aside-lead">Neiva, Huila — caso de estudio MediFlow.</p>
+                <ul class="login-features">
+                    <li><strong>Citas</strong><span>Agenda y consulta tu historial</span></li>
+                    <li><strong>Turnos</strong><span>Sigue tu número de atención</span></li>
+                    <li><strong>Paneles</strong><span>Paciente, recepción, médico y admin</span></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    <script type="module" src="../js/main.js"></script>
+</body>
+
+</html>
