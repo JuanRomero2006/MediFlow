@@ -7,6 +7,17 @@ async function boot() {
       initHomePage();
       break;
     }
+    case 'public': {
+      const button = document.querySelector('.menu-button');
+      const menu = document.querySelector('.mobile-menu');
+      if (button && menu) button.addEventListener('click', () => {
+        const opened = menu.classList.toggle('open');
+        button.setAttribute('aria-expanded', String(opened));
+        button.textContent = opened ? '×' : '☰';
+      });
+      menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { menu.classList.remove('open'); button?.setAttribute('aria-expanded', 'false'); }));
+      break;
+    }
     case 'login': {
       const { initLoginPage } = await import('./pages/login.js');
       await initLoginPage();

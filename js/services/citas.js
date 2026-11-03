@@ -135,3 +135,24 @@ export function updateCitaEstado(id, estado) {
 export function cancelCita(id) {
   return updateCitaEstado(id, 'cancelada');
 }
+
+// Operaciones persistentes: requieren servir el proyecto mediante Apache/PHP y MySQL.
+import { apiFetch } from './api.js';
+
+export async function listCitasBackend(filters = {}) {
+  const params = new URLSearchParams();
+  if (filters.fecha) params.set('fecha', filters.fecha);
+  const suffix = params.toString() ? `?${params.toString()}` : '';
+  const data = await apiFetch(`citas.php${suffix}`);
+  let citas = data.citas || [];
+  if (filters.pacienteId) citas = citas.filter((c) => Number(c.pacienteId) === Number(filters.pacienteId));
+  if (filters.profesionalId) citas = citas.filter((c) => c.profesionalId === filters.profesionalId);
+  return citas.sort((a, b) => `${a.fecha}${a.hora}`.localeCompare(`${b.fecha}${b.hora}`));
+}
+
+export async function actualizarCitaBackend(citaId, accion) {
+  return apiFetch('citas.php', {
+    method: 'POST',
+    body: { citaId: Number(citaId), accion },
+  });
+}

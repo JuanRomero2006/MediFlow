@@ -1,150 +1,146 @@
-import { specialties, timeSlots } from '../../data/specialties.js';
-import { professionals } from '../../data/professionals.js';
-import { createCita, slotTaken } from '../services/citas.js';
+import { apiFetch } from '../services/api.js';
 import { getCurrentUser } from '../services/auth.js';
-import { nextDays, qs, qsa, appPath } from '../utils/helpers.js';
+import { nextDays, qs, qsa, appPath, escapeHtml } from '../utils/helpers.js';
 import { showAlert, clearAlert } from '../components/alerts.js';
 import { initChatbot } from '../components/chatbot.js';
 
 const steps = ['Especialidad', 'Profesional', 'Fecha', 'Horario', 'Paciente', 'Confirmación'];
+const query = (values) => new URLSearchParams(values).toString();
 
 export async function initAgendarPage() {
   initChatbot();
   const params = new URLSearchParams(window.location.search);
-  const preProfessional = params.get('profesional');
-  let preSpecialty = params.get('especialidad');
-  if (preProfessional && !preSpecialty) {
-    const prof = professionals.find((p) => p.id === preProfessional);
-    if (prof) preSpecialty = prof.specialtySlug;
-  }
-
   const state = {
-    step: preProfessional || preSpecialty ? 1 : 0,
-    specialty: preSpecialty || null,
-    professionalId: preProfessional || null,
+    step: 0,
+    specialty: params.get('especialidad') || null,
+    professionalId: params.get('profesional') || null,
     date: null,
     time: null,
+    specialties: [],
+    professionals: [],
+    slots: [],
     patient: { nombre: '', documento: '', telefono: '', email: '' },
   };
-
-  const user = await getCurrentUser();
-  if (user?.rol === 'paciente') {
-    state.patient.nombre = user.nombreCompleto;
-    state.patient.email = user.email;
-  }
 
   const alertBox = qs('#agendar-alert');
   const stepper = qs('#stepper');
   const panel = qs('#step-panel');
   const btnBack = qs('#btn-back');
   const btnNext = qs('#btn-next');
-
-  const days = nextDays(10);
-
-  function renderStepper() {
-    stepper.innerHTML = steps
-      .map(
-        (label, i) =>
-          `<li class="${i === state.step ? 'active' : i < state.step ? 'done' : ''}"><span>${i + 1}</span>${label}</li>`,
-      )
-      .join('');
+  const user = await getCurrentUser();
+  if (user?.rol === 'paciente') {
+    state.patient.nombre = user.nombreCompleto || '';
+    state.patient.email = user.email || '';
   }
 
-  function renderPanel() {
+  try {
+    const data = await apiFetch('catalogo.php?tipo=especialidades');
+    state.specialties = data.especialidades || [];
+    if (!state.specialties.some((item) => item.slug === state.specialty)) state.specialty = null;
+    if (state.specialty) {
+      const doctors = await apiFetch(`catalogo.php?${query({ tipo: 'profesionales', especialidad: state.specialty })}`);
+      state.professionals = doctors.profesionales || [];
+      if (!state.professionals.some((item) => item.id === state.professionalId)) state.professionalId = null;
+    }
+  } catch (error) {
+    showAlert(alertBox, `No fue posible cargar el catálogo desde MySQL. ${error.message}`, 'error');
+  }
+
+  if (state.professionalId) state.step = 2;
+  else if (state.specialty) state.step = 1;
+
+  function renderStepper() {
+    stepper.innerHTML = steps.map((label, i) =>
+      `<li class="${i === state.step ? 'active' : i < state.step ? 'done' : ''}"><span>${i + 1}</span>${label}</li>`
+    ).join('');
+  }
+
+  async function loadProfessionals() {
+    const data = await apiFetch(`catalogo.php?${query({ tipo: 'profesionales', especialidad: state.specialty })}`);
+    state.professionals = data.profesionales || [];
+  }
+
+  async function loadSlots() {
+    const data = await apiFetch(`catalogo.php?${query({ tipo: 'horarios', medico: state.professionalId, especialidad: state.specialty, fecha: state.date })}`);
+    state.slots = data.horarios || [];
+  }
+
+  async function renderPanel() {
     clearAlert(alertBox);
+    btnNext.disabled = false;
     switch (state.step) {
       case 0:
-        panel.innerHTML = `<div class="choice-grid">${specialties
-          .map(
-            (s) =>
-              `<button type="button" class="choice-card${state.specialty === s.slug ? ' selected' : ''}" data-specialty="${s.slug}"><b>${s.icon}</b><strong>${s.name}</strong><small>${s.description}</small></button>`,
-          )
-          .join('')}</div>`;
-        qsa('[data-specialty]', panel).forEach((btn) =>
-          btn.addEventListener('click', () => {
-            state.specialty = btn.dataset.specialty;
-            state.professionalId = null;
-            renderPanel();
-          }),
-        );
+        panel.innerHTML = state.specialties.length
+          ? `<div class="choice-grid">${state.specialties.map((s) =>
+              `<button type="button" class="choice-card${state.specialty === s.slug ? ' selected' : ''}" data-specialty="${escapeHtml(s.slug)}"><b>✚</b><strong>${escapeHtml(s.nombre)}</strong><small>${escapeHtml(s.descripcion || 'Atención médica especializada')}</small><em>${s.profesionales} profesionales</em></button>`
+            ).join('')}</div>`
+          : '<p>No hay especialidades activas registradas en la base de datos.</p>';
+        qsa('[data-specialty]', panel).forEach((button) => button.addEventListener('click', async () => {
+          state.specialty = button.dataset.specialty;
+          state.professionalId = null;
+          state.time = null;
+          try { await loadProfessionals(); renderPanel(); }
+          catch (error) { showAlert(alertBox, error.message, 'error'); }
+        }));
         break;
-      case 1: {
-        const list = professionals.filter((p) => !state.specialty || p.specialtySlug === state.specialty);
-        panel.innerHTML = list.length
-          ? `<div class="choice-grid">${list
-              .map(
-                (p) =>
-                  `<button type="button" class="choice-card${state.professionalId === p.id ? ' selected' : ''}" data-prof="${p.id}"><strong>${p.name}</strong><small>${p.specialty} · ${p.city}</small><em>${p.nextAvailable}</em></button>`,
-              )
-              .join('')}</div>`
-          : '<p>No hay profesionales para esta especialidad en la demostración.</p>';
-        qsa('[data-prof]', panel).forEach((btn) =>
-          btn.addEventListener('click', () => {
-            state.professionalId = btn.dataset.prof;
-            renderPanel();
-          }),
-        );
+      case 1:
+        panel.innerHTML = state.professionals.length
+          ? `<div class="choice-grid">${state.professionals.map((p) =>
+              `<button type="button" class="choice-card${state.professionalId === p.id ? ' selected' : ''}" data-prof="${escapeHtml(p.id)}"><strong>${escapeHtml(p.nombre)}</strong><small>${escapeHtml(p.especialidad)} · ${escapeHtml(p.sede)}</small></button>`
+            ).join('')}</div>`
+          : '<p>No hay profesionales activos asociados a esta especialidad.</p>';
+        qsa('[data-prof]', panel).forEach((button) => button.addEventListener('click', () => {
+          state.professionalId = button.dataset.prof;
+          renderPanel();
+        }));
+        break;
+      case 2: {
+        const days = nextDays(21);
+        panel.innerHTML = `<p class="step-hint">Selecciona el día en el que deseas asistir.</p><div class="date-grid">${days.map((d) =>
+          `<button type="button" class="date-card${state.date === d.iso ? ' selected' : ''}" data-date="${d.iso}"><small>${d.day}</small><strong>${d.num}</strong><span>${d.month}</span></button>`
+        ).join('')}</div>`;
+        qsa('[data-date]', panel).forEach((button) => button.addEventListener('click', async () => {
+          state.date = button.dataset.date;
+          state.time = null;
+          state.step = 3;
+          btnNext.disabled = true;
+          try { await loadSlots(); renderPanel(); }
+          catch (error) { showAlert(alertBox, error.message, 'error'); btnNext.disabled = false; }
+        }));
         break;
       }
-      case 2:
-        panel.innerHTML = `<div class="date-grid">${days
-          .map(
-            (d) =>
-              `<button type="button" class="date-card${state.date === d.iso ? ' selected' : ''}" data-date="${d.iso}"><small>${d.day}</small><strong>${d.num}</strong><span>${d.month}</span></button>`,
-          )
-          .join('')}</div>`;
-        qsa('[data-date]', panel).forEach((btn) =>
-          btn.addEventListener('click', () => {
-            state.date = btn.dataset.date;
-            renderPanel();
-          }),
-        );
-        break;
       case 3:
-        panel.innerHTML = `<div class="slot-grid">${timeSlots
-          .map((slot) => {
-            const taken = slotTaken({
-              fecha: state.date,
-              hora: slot,
-              profesionalId: state.professionalId,
-            });
-            return `<button type="button" class="slot${state.time === slot ? ' selected' : ''}" data-slot="${slot}" ${taken ? 'disabled' : ''}>${slot}${taken ? ' (ocupado)' : ''}</button>`;
-          })
-          .join('')}</div>`;
-        qsa('[data-slot]:not([disabled])', panel).forEach((btn) =>
-          btn.addEventListener('click', () => {
-            state.time = btn.dataset.slot;
-            renderPanel();
-          }),
-        );
+        panel.innerHTML = state.slots.length
+          ? `<p class="step-hint">Horarios calculados con la agenda y las citas registradas en MySQL.</p><div class="slot-grid">${state.slots.map((slot) =>
+              `<button type="button" class="slot${state.time === slot.hora ? ' selected' : ''}" data-slot="${escapeHtml(slot.hora)}">${escapeHtml(slot.hora)}${slot.disponibles > 1 ? ` · ${slot.disponibles} cupos` : ''}</button>`
+            ).join('')}</div>`
+          : '<div class="empty-state"><h3>Sin disponibilidad</h3><p>No encontramos horarios libres para este día. Regresa y selecciona otra fecha.</p></div>';
+        qsa('[data-slot]', panel).forEach((button) => button.addEventListener('click', () => {
+          state.time = button.dataset.slot;
+          renderPanel();
+        }));
         break;
       case 4:
-        panel.innerHTML = `
-          <form id="patient-form" class="form-grid">
-            <label>Nombre completo<input required name="nombre" value="${state.patient.nombre}"></label>
-            <label>Documento<input name="documento" value="${state.patient.documento}"></label>
-            <label>Teléfono<input required name="telefono" value="${state.patient.telefono}"></label>
-            <label>Correo<input type="email" name="email" value="${state.patient.email}"></label>
-          </form>`;
-        qs('#patient-form', panel)?.addEventListener('input', (e) => {
-          const fd = new FormData(e.currentTarget);
-          state.patient = Object.fromEntries(fd.entries());
+        panel.innerHTML = `<form id="patient-form" class="form-grid">
+          <label>Nombre completo<input required name="nombre" autocomplete="name" value="${escapeHtml(state.patient.nombre)}"></label>
+          <label>Documento<input name="documento" autocomplete="off" value="${escapeHtml(state.patient.documento)}"></label>
+          <label>Teléfono<input required name="telefono" autocomplete="tel" value="${escapeHtml(state.patient.telefono)}"></label>
+          <label>Correo electrónico<input type="email" name="email" autocomplete="email" value="${escapeHtml(state.patient.email)}"></label>
+        </form><p class="step-hint">La cita se asociará a tu cuenta de paciente. Los datos de contacto se mantienen como referencia del formulario.</p>`;
+        qs('#patient-form', panel)?.addEventListener('input', (event) => {
+          state.patient = Object.fromEntries(new FormData(event.currentTarget).entries());
         });
         break;
       default: {
-        const prof = professionals.find((p) => p.id === state.professionalId);
-        const spec = specialties.find((s) => s.slug === state.specialty);
-        panel.innerHTML = `
-          <div class="summary-card">
-            <h3>Resumen de la cita (demostración)</h3>
-            <ul>
-              <li><strong>Especialidad:</strong> ${spec?.name || ''}</li>
-              <li><strong>Profesional:</strong> ${prof?.name || ''}</li>
-              <li><strong>Fecha:</strong> ${state.date}</li>
-              <li><strong>Hora:</strong> ${state.time}</li>
-              <li><strong>Paciente:</strong> ${state.patient.nombre}</li>
-            </ul>
-          </div>`;
+        const prof = state.professionals.find((p) => p.id === state.professionalId);
+        const spec = state.specialties.find((s) => s.slug === state.specialty);
+        panel.innerHTML = `<div class="summary-card"><span class="eyebrow">Revisa tu solicitud</span><h3>Resumen de la cita</h3><ul>
+          <li><strong>Especialidad:</strong> ${escapeHtml(spec?.nombre || '')}</li>
+          <li><strong>Profesional:</strong> ${escapeHtml(prof?.nombre || '')}</li>
+          <li><strong>Fecha:</strong> ${escapeHtml(state.date || '')}</li>
+          <li><strong>Hora:</strong> ${escapeHtml(state.time || '')}</li>
+          <li><strong>Paciente:</strong> ${escapeHtml(state.patient.nombre)}</li>
+        </ul></div>`;
       }
     }
     btnBack.disabled = state.step === 0;
@@ -153,25 +149,18 @@ export async function initAgendarPage() {
   }
 
   function canContinue() {
-    switch (state.step) {
-      case 0:
-        return Boolean(state.specialty);
-      case 1:
-        return Boolean(state.professionalId);
-      case 2:
-        return Boolean(state.date);
-      case 3:
-        return Boolean(state.time);
-      case 4:
-        return state.patient.nombre.trim().length > 2 && state.patient.telefono.trim().length > 6;
-      default:
-        return true;
-    }
+    if (state.step === 0) return Boolean(state.specialty);
+    if (state.step === 1) return Boolean(state.professionalId);
+    if (state.step === 2) return Boolean(state.date);
+    if (state.step === 3) return Boolean(state.time);
+    if (state.step === 4) return state.patient.nombre.trim().length > 2 && state.patient.telefono.trim().length > 6;
+    return true;
   }
 
-  btnBack?.addEventListener('click', () => {
+  btnBack?.addEventListener('click', async () => {
     if (state.step > 0) {
       state.step -= 1;
+      if (state.step === 1 && !state.professionals.length) await loadProfessionals();
       renderPanel();
     }
   });
@@ -186,39 +175,25 @@ export async function initAgendarPage() {
       renderPanel();
       return;
     }
-
-    btnNext.disabled = true;
-    btnNext.textContent = 'Guardando...';
-    const result = createCita({
-      pacienteId: user?.pacienteId || null,
-      pacienteNombre: state.patient.nombre,
-      documento: state.patient.documento,
-      telefono: state.patient.telefono,
-      email: state.patient.email,
-      especialidadSlug: state.specialty,
-      profesionalId: state.professionalId,
-      fecha: state.date,
-      hora: state.time,
-    });
-    btnNext.disabled = false;
-    btnNext.textContent = 'Confirmar cita';
-
-    if (!result.ok) {
-      showAlert(alertBox, result.error, 'error');
+    if (!user || user.rol !== 'paciente') {
+      showAlert(alertBox, `Para registrar una cita debes iniciar sesión con una cuenta de paciente. <a href="${appPath('pages/login.html')}">Iniciar sesión</a>.`, 'error');
       return;
     }
-
-    panel.innerHTML = `
-      <div class="success-panel">
-        <h3>Cita registrada (demostración local)</h3>
-        <p>Tu solicitud quedó guardada en este navegador. ID: <strong>${result.cita.id}</strong></p>
-        <div class="hero-buttons">
-          <a class="btn" href="${appPath('pages/paciente/citas.html')}">Ver mis citas</a>
-          <a class="btn outline" href="${appPath('index.html')}">Volver al inicio</a>
-        </div>
-      </div>`;
-    btnBack.hidden = true;
-    btnNext.hidden = true;
+    btnNext.disabled = true;
+    btnNext.textContent = 'Guardando...';
+    try {
+      const result = await apiFetch('citas.php', {
+        method: 'POST',
+        body: { especialidadSlug: state.specialty, profesionalId: state.professionalId, fecha: state.date, hora: state.time },
+      });
+      panel.innerHTML = `<div class="success-panel"><span class="success-icon">✓</span><h3>Cita registrada correctamente</h3><p>Tu cita quedó guardada en MySQL. Número de cita: <strong>${result.cita.id}</strong></p><p>Fecha: <strong>${escapeHtml(state.date)}</strong> · Hora: <strong>${escapeHtml(state.time)}</strong></p><div class="hero-buttons"><a class="btn" href="${appPath('pages/paciente/citas.html')}">Ver mis citas</a><a class="btn outline" href="${appPath('index.html')}">Volver al inicio</a></div></div>`;
+      btnBack.hidden = true;
+      btnNext.hidden = true;
+    } catch (error) {
+      showAlert(alertBox, error.message, 'error');
+      btnNext.disabled = false;
+      btnNext.textContent = 'Confirmar cita';
+    }
   });
 
   renderPanel();
