@@ -1,8 +1,16 @@
+/**
+ * ==============================================================================
+ * MEDIFLOW CHATBOT — ASISTENTE VIRTUAL CLÍNICO
+ * Soporte interactivo para orientación de citas, turnos y servicios con Lucide
+ * ==============================================================================
+ */
+
 import { faqs, chatQuickReplies } from '../../data/faqs.js';
 import { appPath, escapeHtml } from '../utils/helpers.js';
+import { icon } from './icons.js';
 
 const WELCOME =
-  'Hola 👋 Soy el asistente de MediFlow (versión inicial). Puedo orientarte sobre citas, turnos e inicio de sesión. No entrego diagnósticos médicos.';
+  'Hola 👋 Soy el asistente de MediFlow. Puedo orientarte sobre citas médicas, turnos virtuales y servicios de la clínica. No entrego diagnósticos médicos.';
 
 function findFaqAnswer(text) {
   const q = text.toLowerCase();
@@ -15,7 +23,7 @@ function findFaqAnswer(text) {
 }
 
 function defaultAnswer() {
-  return 'No tengo una respuesta exacta para eso. Prueba con las opciones sugeridas o revisa Preguntas frecuentes en la página principal.';
+  return 'No tengo una respuesta exacta para eso. Prueba seleccionando una de las opciones sugeridas o revisa la sección de Preguntas frecuentes.';
 }
 
 export function initChatbot(options = {}) {
@@ -32,10 +40,34 @@ export function initChatbot(options = {}) {
   const brand = options.brandName || 'MediFlow';
   const triggerLabel = chatTrigger.querySelector('span');
 
+  // Aplicar icono Lucide al disparador flotante
+  if (!chatTrigger.dataset.iconEnhanced) {
+    const chatIconSvg = icon('message-square', { size: 18 });
+    chatTrigger.innerHTML = `${chatIconSvg} <span>¿Necesitas ayuda?</span>`;
+    chatTrigger.dataset.iconEnhanced = 'true';
+  }
+
+  // Aplicar icono de cierre a la cabecera
+  if (closeButton && !closeButton.dataset.iconEnhanced) {
+    closeButton.innerHTML = icon('x', { size: 18 });
+    closeButton.dataset.iconEnhanced = 'true';
+  }
+
+  // Aplicar icono de envío al botón del formulario
+  const submitBtn = form?.querySelector('button[type="submit"]');
+  if (submitBtn && !submitBtn.dataset.iconEnhanced) {
+    submitBtn.innerHTML = `${icon('send', { size: 15 })} <span class="sr-only">Enviar</span>`;
+    submitBtn.dataset.iconEnhanced = 'true';
+  }
+
   const setOpen = (open) => {
     chat.classList.toggle('open', open);
-    if (triggerLabel) {
-      triggerLabel.textContent = open ? 'Cerrar' : '¿Necesitas ayuda?';
+    const label = chatTrigger.querySelector('span');
+    if (label) {
+      label.textContent = open ? 'Cerrar' : '¿Necesitas ayuda?';
+    }
+    if (open) {
+      input?.focus();
     }
   };
 

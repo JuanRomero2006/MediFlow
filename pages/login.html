@@ -16,12 +16,12 @@
 
 <body data-page="login">
     <header class="login-topbar">
-        <a class="login-back" href="../index.html"><span aria-hidden="true">←</span> Volver a la página principal</a>
+        <a class="login-back" href="../index.html"><span data-icon="arrow-left" data-icon-size="16"></span> <span>Volver a la página principal</span></a>
     </header>
     <div class="login-page">
         <div class="login-panel">
             <div class="login-form-wrap">
-                <a class="brand" href="../index.html"><span class="brand-mark">♥</span><span>MediFlow</span></a>
+                <a class="brand" href="../index.html"><span class="brand-mark" data-icon="heart-pulse"></span><span>MediFlow</span></a>
                 <div class="login-card">
                 <h1>Ingresa a tu cuenta</h1>
                 <p class="login-lead">El sistema te redirigirá al panel según el rol de tu cuenta.</p>
@@ -34,7 +34,12 @@
                     </div>
                     <div class="form-field">
                         <label for="password">Contraseña</label>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required>
+                        <div class="input-with-action">
+                            <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+                            <button type="button" class="input-action-btn" id="toggle-password" aria-label="Mostrar u ocultar contraseña">
+                                <span data-icon="eye" data-icon-size="18"></span>
+                            </button>
+                        </div>
                     </div>
                     <button id="login-submit" class="btn large login-submit" type="submit">Iniciar sesión</button>
                 </form>

@@ -1,23 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MediFlow: información de servicios médicos y acceso al sistema de citas y turnos de demostración.">
-  <title>MediFlow | Atención más cerca de ti</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MediFlow: plataforma web de gestión clínica, citas médicas y turnos virtuales.">
+  <title>MediFlow | Atención médica más cerca de ti</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pages/public-pages.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/pages/public-pages.css">
 </head>
 <body data-page="home">
-<header class="header"><nav class="container nav" aria-label="Navegación principal">
-<a class="brand" href="index.html"><span class="brand-mark">♥</span><span>MediFlow</span></a>
-<div class="desktop-nav"><a class="active" href="index.html">Inicio</a><a href="pages/nosotros.html">Nosotros</a><a href="pages/servicios.html">Servicios</a><a href="pages/especialidades.html">Especialidades</a><a href="pages/profesionales.html">Profesionales</a><a href="pages/faq.html">Ayuda</a><a href="pages/contacto.html">Contacto</a></div>
-<div class="nav-actions"><a class="btn ghost" href="pages/login.html">Iniciar sesión</a><a class="btn" href="pages/agendar.html">Solicitar cita</a></div><button class="menu-button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú">☰</button></nav>
-<div id="mobile-menu" class="mobile-menu"><a href="index.html">Inicio</a><a href="pages/nosotros.html">Nosotros</a><a href="pages/servicios.html">Servicios</a><a href="pages/especialidades.html">Especialidades</a><a href="pages/profesionales.html">Profesionales</a><a href="pages/faq.html">Ayuda</a><a href="pages/contacto.html">Contacto</a><div class="mobile-actions"><a class="btn outline" href="pages/login.html">Iniciar sesión</a><a class="btn" href="pages/agendar.html">Solicitar cita</a></div></div></header>
+<header class="header">
+  <nav class="container nav" aria-label="Navegación principal">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" data-icon="heart-pulse"></span>
+      <span>MediFlow</span>
+    </a>
+    <div class="desktop-nav">
+      <a class="active" href="index.html">Inicio</a>
+      <a href="pages/nosotros.html">Nosotros</a>
+      <a href="pages/servicios.html">Servicios</a>
+      <a href="pages/especialidades.html">Especialidades</a>
+      <a href="pages/profesionales.html">Profesionales</a>
+      <a href="pages/faq.html">Ayuda</a>
+      <a href="pages/contacto.html">Contacto</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn ghost" href="pages/login.html">Iniciar sesión</a>
+      <a class="btn" href="pages/agendar.html">Solicitar cita</a>
+    </div>
+    <button class="menu-button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú">
+      <span data-icon="menu" data-icon-size="20"></span>
+    </button>
+  </nav>
+  <div id="mobile-menu" class="mobile-menu">
+    <a href="index.html">Inicio</a>
+    <a href="pages/nosotros.html">Nosotros</a>
+    <a href="pages/servicios.html">Servicios</a>
+    <a href="pages/especialidades.html">Especialidades</a>
+    <a href="pages/profesionales.html">Profesionales</a>
+    <a href="pages/faq.html">Ayuda</a>
+    <a href="pages/contacto.html">Contacto</a>
+    <div class="mobile-actions">
+      <a class="btn outline" href="pages/login.html">Iniciar sesión</a>
+      <a class="btn" href="pages/agendar.html">Solicitar cita</a>
+    </div>
+  </div>
+</header>
 <main>
-<section class="hero"><div class="container hero-grid"><div class="hero-copy"><span class="pill">Cuidado y orientación en un solo lugar</span><h1>Tu salud, más cerca y más fácil.</h1><p>Conoce nuestros servicios, encuentra profesionales y accede al sistema de citas y turnos de MediFlow.</p><div class="hero-buttons"><a class="btn large" href="pages/agendar.html">Solicitar una cita</a><a class="btn large outline" href="pages/servicios.html">Explorar servicios</a></div><dl class="stats"><div><dt>Atención</dt><dd>Organizada</dd></div><div><dt>Acceso</dt><dd>En línea</dd></div><div><dt>Neiva</dt><dd>Huila, Colombia</dd></div></dl></div><div class="hero-image-wrap"><img src="assets/images/backgrounds/hero-doctor.jpg" alt="Profesional de salud en un consultorio moderno"><div class="floating availability"><small>Plataforma MediFlow</small><strong>✓ Citas y turnos</strong><p>Acceso según tu perfil</p></div></div></div></section>
-<section class="section container"><div class="intro"><span>Explora MediFlow</span><h2>Encuentra lo que necesitas</h2><p>La información está organizada en páginas independientes para que puedas llegar directamente a cada sección.</p></div><div class="cards services"><article class="card"><b class="icon">✚</b><h3>Servicios médicos</h3><p>Consulta información de los servicios de atención disponibles.</p><a href="pages/servicios.html">Ver servicios →</a></article><article class="card"><b class="icon">♡</b><h3>Especialidades</h3><p>Explora áreas médicas y busca la atención que necesitas.</p><a href="pages/especialidades.html">Ver especialidades →</a></article><article class="card"><b class="icon">▣</b><h3>Agendamiento</h3><p>Accede al formulario de demostración para solicitar una cita.</p><a href="pages/agendar.html">Agendar cita →</a></article></div></section>
-<section class="section shaded"><div class="container feature-band"><div><span class="eyebrow">Plataforma de atención</span><h2>Más claridad en cada paso.</h2><p>Consulta tu información desde el módulo correspondiente. Pacientes, recepción, médicos y administradores tienen accesos separados.</p><a class="btn" href="pages/login.html">Entrar a MediFlow</a></div><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=85" alt="Profesional de salud conversando con un paciente" loading="lazy"></div></section>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="pill">Cuidado y orientación en un solo lugar</span>
+        <h1>Tu salud, más cerca y más fácil.</h1>
+        <p>Conoce nuestros servicios, encuentra profesionales certificados y accede al sistema integrado de citas y turnos de MediFlow.</p>
+        <div class="hero-buttons">
+          <a class="btn large" href="pages/agendar.html">Solicitar una cita</a>
+          <a class="btn large outline" href="pages/servicios.html">Explorar servicios</a>
+        </div>
+        <dl class="stats">
+          <div><dt>Atención</dt><dd>Organizada</dd></div>
+          <div><dt>Acceso</dt><dd>En línea</dd></div>
+          <div><dt>Neiva</dt><dd>Huila, Colombia</dd></div>
+        </dl>
+      </div>
+      <div class="hero-image-wrap">
+        <img src="assets/images/backgrounds/hero-doctor.jpg" alt="Profesional de salud en un consultorio moderno">
+        <div class="floating availability">
+          <small>Plataforma MediFlow</small>
+          <strong class="badge badge-success">✓ Citas y turnos</strong>
+          <p>Acceso según tu perfil</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="intro">
+      <span>Explora MediFlow</span>
+      <h2>Encuentra lo que necesitas</h2>
+      <p>La información está organizada en módulos independientes para que puedas llegar directamente a cada área de atención.</p>
+    </div>
+    <div class="cards services">
+      <article class="card">
+        <b class="icon" data-icon="shield-plus" data-icon-size="24"></b>
+        <h3>Servicios médicos</h3>
+        <p>Consulta información de los servicios de consulta externa y procedimientos disponibles.</p>
+        <a href="pages/servicios.html">Ver servicios →</a>
+      </article>
+      <article class="card">
+        <b class="icon" data-icon="heart-pulse" data-icon-size="24"></b>
+        <h3>Especialidades</h3>
+        <p>Explora especialidades médicas de primer nivel y encuentra la atención que requieres.</p>
+        <a href="pages/especialidades.html">Ver especialidades →</a>
+      </article>
+      <article class="card">
+        <b class="icon" data-icon="calendar" data-icon-size="24"></b>
+        <h3>Agendamiento</h3>
+        <p>Accede al flujo guiado para agendar tu cita médica con disponibilidad en tiempo real.</p>
+        <a href="pages/agendar.html">Agendar cita →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section shaded">
+    <div class="container feature-band">
+      <div>
+        <span class="eyebrow">Plataforma clínica integral</span>
+        <h2>Más claridad en cada paso.</h2>
+        <p>Gestiona tu atención desde el módulo correspondiente. Pacientes, recepción, médicos y administradores cuentan con herramientas diseñadas para su flujo de trabajo.</p>
+        <a class="btn" href="pages/login.html">Entrar a MediFlow</a>
+      </div>
+      <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=85" alt="Profesional de salud conversando con un paciente" loading="lazy">
+    </div>
+  </section>
 </main>
-<footer class="public-footer"><div class="container footer-grid"><div><a class="brand" href="index.html"><span class="brand-mark">♥</span><span>MediFlow</span></a><p>Proyecto académico de demostración para organizar citas y turnos médicos. No reemplaza los canales oficiales ni la atención profesional.</p></div><div><strong>Explorar</strong><a href="pages/nosotros.html">Nosotros</a><a href="pages/servicios.html">Servicios</a><a href="pages/especialidades.html">Especialidades</a></div><div><strong>Acceso</strong><a href="pages/agendar.html">Solicitar cita</a><a href="pages/login.html">Iniciar sesión</a><a href="pages/contacto.html">Contacto</a></div></div><div class="container copyright">© MediFlow · Caso de estudio Previred, Neiva, Huila. Información de demostración.</div></footer>
-<script type="module" src="js/main.js"></script></body></html>
+
+<footer class="public-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="index.html">
+        <span class="brand-mark" data-icon="heart-pulse"></span>
+        <span>MediFlow</span>
+      </a>
+      <p>Plataforma para organizar citas y turnos médicos. Inspirada en el modelo de atención de Clínica Previred, Neiva, Huila.</p>
+    </div>
+    <div>
+      <strong>Explorar</strong>
+      <a href="pages/nosotros.html">Nosotros</a>
+      <a href="pages/servicios.html">Servicios</a>
+      <a href="pages/especialidades.html">Especialidades</a>
+      <a href="pages/profesionales.html">Profesionales</a>
+    </div>
+    <div>
+      <strong>Acceso</strong>
+      <a href="pages/agendar.html">Solicitar cita</a>
+      <a href="pages/login.html">Iniciar sesión</a>
+      <a href="pages/contacto.html">Contacto</a>
+    </div>
+  </div>
+  <div class="container copyright">© MediFlow · Caso de estudio Previred, Neiva, Huila. Todos los derechos reservados.</div>
+</footer>
+
+<aside class="chat" aria-live="polite">
+  <div class="chat-head">
+    <b><span data-icon="heart-pulse" data-icon-size="18"></span></b>
+    <span>
+      <strong>Asistente MediFlow</strong>
+      <small>Orientación clínica en línea</small>
+    </span>
+    <button class="close-chat" aria-label="Cerrar chat">
+      <span data-icon="x" data-icon-size="18"></span>
+    </button>
+  </div>
+  <div class="chat-body"></div>
+  <div class="quick chat-quick">
+    <button>Agendar cita</button>
+    <button>Iniciar sesión</button>
+    <button>Consultar turno</button>
+    <button>Ver servicios</button>
+  </div>
+  <form class="chat-form">
+    <input class="chat-input" type="text" placeholder="Escribe tu consulta..." aria-label="Mensaje">
+    <button class="btn small" type="submit">
+      <span data-icon="send" data-icon-size="15"></span>
+      <span class="sr-only">Enviar</span>
+    </button>
+  </form>
+</aside>
+<button class="chat-trigger" type="button">
+  <span data-icon="message-square" data-icon-size="18"></span>
+  <span>¿Necesitas ayuda?</span>
+</button>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

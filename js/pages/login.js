@@ -2,8 +2,11 @@ import { login, redirectByRole, getCurrentUser } from '../services/auth.js';
 import { validateLoginForm } from '../utils/validators.js';
 import { showAlert, clearAlert } from '../components/alerts.js';
 import { qs } from '../utils/helpers.js';
+import { icon, replaceIconPlaceholders } from '../components/icons.js';
 
 export async function initLoginPage() {
+  replaceIconPlaceholders();
+
   const existing = await getCurrentUser();
   if (existing) {
     redirectByRole(existing.rol);
@@ -13,6 +16,17 @@ export async function initLoginPage() {
   const form = qs('#login-form');
   const alertBox = qs('#login-alert');
   const submitBtn = qs('#login-submit');
+  const togglePassBtn = qs('#toggle-password');
+  const passwordInput = qs('#password');
+
+  // Toggle de visibilidad de contraseña
+  togglePassBtn?.addEventListener('click', () => {
+    if (!passwordInput) return;
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    togglePassBtn.innerHTML = icon(isPassword ? 'eye-off' : 'eye', { size: 18 });
+    togglePassBtn.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+  });
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -28,7 +42,7 @@ export async function initLoginPage() {
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Ingresando...';
+    submitBtn.innerHTML = '<span class="spinner spinner-sm"></span> <span>Ingresando...</span>';
 
     const result = await login(identifier, password);
 

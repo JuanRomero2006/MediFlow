@@ -6,6 +6,8 @@
   "description": "MediFlow — agendamiento y turnos virtuales (Clínica Previred, demostración académica)",
   "scripts": {
     "start": "npx --yes serve -l 8080",
-    "test:auth": "node scripts/test-auth.mjs"
+    "test:auth": "node scripts/test-auth.mjs",
+    "test:nav": "node scripts/test-navigation.mjs",
+    "test": "node scripts/test-auth.mjs && node scripts/test-navigation.mjs"
   }
 }

@@ -1,3 +1,5 @@
+import { replaceIconPlaceholders } from './components/icons.js';
+
 const page = document.body.dataset.page;
 
 async function boot() {
@@ -46,5 +48,7 @@ async function boot() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  boot().catch((err) => console.error(err));
+  boot()
+    .then(() => replaceIconPlaceholders())
+    .catch((err) => console.error(err));
 });
