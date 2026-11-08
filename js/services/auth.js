@@ -1,18 +1,10 @@
-import {
-  findDemoUserByIdentifier,
-  findDemoUserById,
-} from '../../data/demo-users.js';
-import {
-  getSessionItem,
-  setSessionItem,
-  removeSessionItem,
-} from '../utils/storage.js';
-import { fullName } from '../utils/formatters.js';
+import { apiFetch } from './api.js';
 import { appPath } from '../utils/helpers.js';
 
-const SESSION_KEY = 'session';
-const DEMO_SALT = 'mediflow-demo-v1';
-const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
+/**
+ * Autenticación contra el backend PHP (api/login.php, api/me.php, api/logout.php).
+ * La sesión vive en el servidor (cookie de PHP); el navegador ya no guarda la sesión.
+ */
 
 export const ROLE_PATHS = {
   paciente: 'pages/paciente/dashboard.html',
@@ -21,81 +13,35 @@ export const ROLE_PATHS = {
   administrador: 'pages/administrador/dashboard.html',
 };
 
-async function hashValue(value) {
-  const data = new TextEncoder().encode(value);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function hashPassword(password) {
-  return hashValue(`${DEMO_SALT}:${password}`);
-}
-
-async function signSession(userId, issuedAt) {
-  return hashValue(`${DEMO_SALT}:session:${userId}:${issuedAt}`);
-}
-
 export function normalizeRole(rol) {
   if (rol === 'recepcionista') return 'recepcion';
+  if (rol === 'superadmin') return 'administrador';
   return rol;
 }
 
 function toPublicUser(user) {
-  return {
-    id: user.id,
-    email: user.email,
-    username: user.username,
-    nombres: user.nombres,
-    apellidos: user.apellidos,
-    nombreCompleto: fullName(user),
-    rol: normalizeRole(user.rol),
-    medicoId: user.medicoId || null,
-    pacienteId: user.pacienteId || null,
-  };
-}
-
-async function validateSessionRecord(session) {
-  if (!session?.userId || !session?.issuedAt || !session?.signature) return null;
-  if (Date.now() - session.issuedAt > SESSION_TTL_MS) return null;
-
-  const expected = await signSession(session.userId, session.issuedAt);
-  if (expected !== session.signature) return null;
-
-  const user = findDemoUserById(session.userId);
-  if (!user) return null;
-
-  return toPublicUser(user);
+  return { ...user, rol: normalizeRole(user.rol) };
 }
 
 export async function login(identifier, password) {
-  const user = findDemoUserByIdentifier(identifier);
-  if (!user) {
-    return { ok: false, error: 'No encontramos una cuenta con esos datos.' };
+  try {
+    const data = await apiFetch('login.php', {
+      method: 'POST',
+      body: { identifier, password },
+    });
+    return { ok: true, user: toPublicUser(data.user) };
+  } catch (error) {
+    return { ok: false, error: error.message };
   }
-
-  const passwordHash = await hashPassword(password);
-  if (passwordHash !== user.passwordHash) {
-    return { ok: false, error: 'Contraseña incorrecta. Verifica e intenta de nuevo.' };
-  }
-
-  const issuedAt = Date.now();
-  const signature = await signSession(user.id, issuedAt);
-  const saved = setSessionItem(SESSION_KEY, {
-    userId: user.id,
-    issuedAt,
-    signature,
-  });
-
-  if (!saved) {
-    return { ok: false, error: 'No fue posible guardar la sesión en este navegador.' };
-  }
-
-  return { ok: true, user: toPublicUser(user) };
 }
 
 export async function getCurrentUser() {
-  const session = getSessionItem(SESSION_KEY);
-  return validateSessionRecord(session);
+  try {
+    const data = await apiFetch('me.php');
+    return toPublicUser(data.user);
+  } catch {
+    return null; // sin sesión (o sin conexión): se trata como no autenticado
+  }
 }
 
 export function redirectByRole(rol) {
@@ -108,7 +54,11 @@ export function redirectByRole(rol) {
 }
 
 export async function logout(loginRelative = 'pages/login.html') {
-  removeSessionItem(SESSION_KEY);
+  try {
+    await apiFetch('logout.php', { method: 'POST' });
+  } catch {
+    // aunque falle la petición, se lleva al usuario al login
+  }
   window.location.href = appPath(loginRelative);
 }
 

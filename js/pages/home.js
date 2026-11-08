@@ -18,16 +18,24 @@ function initMobileMenu() {
   const closeMenu = () => {
     mobileMenu.classList.remove('open');
     menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.textContent = '☰';
+    menuButton.innerHTML = '<span data-icon="menu" aria-hidden="true">☰</span>';
+    menuButton.setAttribute('aria-label', 'Abrir menú de navegación');
   };
 
   menuButton.addEventListener('click', () => {
     const isOpen = mobileMenu.classList.toggle('open');
     menuButton.setAttribute('aria-expanded', String(isOpen));
-    menuButton.textContent = isOpen ? '×' : '☰';
+    menuButton.innerHTML = isOpen ? '<span aria-hidden="true">×</span>' : '<span data-icon="menu" aria-hidden="true">☰</span>';
+    menuButton.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
   });
 
   mobileMenu.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && mobileMenu.classList.contains('open')) {
+      closeMenu();
+      menuButton.focus();
+    }
+  });
 }
 
 function renderSpecialtyGrid() {

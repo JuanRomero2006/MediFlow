@@ -21,3 +21,12 @@ export function listDemoStaff() {
     rol: u.rol,
   }));
 }
+
+
+// Consulta pacientes reales para el panel de recepción.
+import { apiFetch } from './api.js';
+
+export async function listPacientesBackend() {
+  const data = await apiFetch('pacientes.php');
+  return data.pacientes || [];
+}

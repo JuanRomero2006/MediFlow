@@ -121,3 +121,20 @@ export function registrarLlegada(citaId) {
   }
   return { ok: false, error: 'No hay turno asociado a esta cita.' };
 }
+
+// Operaciones persistentes para el módulo de recepción.
+import { apiFetch } from './api.js';
+
+export async function listTurnosBackend(filters = {}) {
+  const params = new URLSearchParams();
+  if (filters.fecha) params.set('fecha', filters.fecha);
+  const suffix = params.toString() ? `?${params.toString()}` : '';
+  const data = await apiFetch(`turnos.php${suffix}`);
+  let turnos = data.turnos || [];
+  if (filters.pacienteId) turnos = turnos.filter((t) => Number(t.pacienteId) === Number(filters.pacienteId));
+  return turnos;
+}
+
+export async function actualizarTurnoBackend(turnoId, estado) {
+  return apiFetch('turnos.php', { method: 'POST', body: { turnoId: Number(turnoId), estado } });
+}

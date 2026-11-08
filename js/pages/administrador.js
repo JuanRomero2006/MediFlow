@@ -1,7 +1,5 @@
 import { requireAuth } from '../services/auth.js';
-import { resetDemoCitas } from '../services/citas.js';
-import { resetDemoTurnos } from '../services/turnos.js';
-import { listDemoStaff, listDemoPacientes } from '../services/usuarios.js';
+import { apiFetch } from '../services/api.js';
 import { initDashboardChrome } from '../components/sidebar.js';
 import { qs } from '../utils/helpers.js';
 import { showAlert } from '../components/alerts.js';
@@ -16,31 +14,26 @@ export async function initAdminPage(page) {
   const user = await requireAuth(['administrador']);
   if (!user) return;
   initDashboardChrome({ user, navItems: NAV, activeLabel: page });
-
-  if (page === 'Dashboard') {
-    qs('[data-stat-pacientes]')?.replaceChildren(
-      document.createTextNode(String(listDemoPacientes().length)),
-    );
-    qs('[data-stat-staff]')?.replaceChildren(
-      document.createTextNode(String(listDemoStaff().length)),
-    );
+  if (page === 'Dashboard' || page === 'Usuarios') {
+    try {
+      const data = await apiFetch('usuarios.php');
+      const usuarios = data.usuarios || [];
+      const pacientes = usuarios.filter((u) => u.rol.split(', ').includes('paciente'));
+      const staff = usuarios.filter((u) => !u.rol.split(', ').includes('paciente'));
+      qs('[data-stat-pacientes]')?.replaceChildren(document.createTextNode(String(pacientes.length)));
+      qs('[data-stat-staff]')?.replaceChildren(document.createTextNode(String(staff.length)));
+      if (page === 'Usuarios') {
+        const tbody = qs('#usuarios-table tbody');
+        if (tbody) tbody.innerHTML = usuarios.map((u) => `<tr><td>${escapeHtml(u.nombre)}</td><td>${escapeHtml(u.email || '—')}</td><td>${escapeHtml(u.rol)}</td><td>${escapeHtml(u.estado)}</td></tr>`).join('') || '<tr><td colspan="4">No hay usuarios registrados.</td></tr>';
+      }
+    } catch (error) { showAlert(qs('#page-alert'), error.message, 'error'); }
   }
-
-  if (page === 'Usuarios') {
-    const tbody = qs('#usuarios-table tbody');
-    if (tbody) {
-      tbody.innerHTML = [...listDemoPacientes(), ...listDemoStaff()]
-        .map((u) => `<tr><td>${u.nombre}</td><td>${u.email || '—'}</td><td>${u.rol || 'paciente'}</td></tr>`)
-        .join('');
-    }
-  }
-
   if (page === 'Configuración') {
-    qs('#reset-demo')?.addEventListener('click', () => {
-      if (!window.confirm('¿Restablecer citas y turnos de demostración en este navegador?')) return;
-      resetDemoCitas();
-      resetDemoTurnos();
-      showAlert(qs('#page-alert'), 'Datos de demostración restablecidos.', 'success');
-    });
+    const info = qs('#config-info');
+    if (info) info.textContent = 'La configuración de conexión se administra en api/config/conexion.php. No se modifican datos de producción desde esta pantalla.';
   }
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 }

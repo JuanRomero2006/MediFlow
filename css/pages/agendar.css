@@ -181,3 +181,47 @@
         grid-template-columns: 1fr
     }
 }
+
+/* Refinamiento visual: agenda moderna, clara y coherente con la identidad MediFlow. */
+.agendar-page{max-width:1120px;padding-top:48px}
+.agendar-page>.dash-title{font:800 clamp(2rem,4vw,2.8rem)/1.12 'Plus Jakarta Sans',sans-serif;letter-spacing:-.045em;margin-bottom:8px}
+.agendar-page>.dash-subtitle{color:var(--muted);margin:0 0 26px}
+.stepper{gap:9px;margin-bottom:20px}
+.stepper li{font-size:12px;padding:8px 13px;box-shadow:0 3px 12px #203e4a08}
+.stepper li span{width:22px;height:22px;font-size:11px;font-weight:800}
+.agendar-panel{border-radius:22px;padding:clamp(18px,3vw,30px);min-height:260px;box-shadow:0 18px 50px #173e4610}
+.choice-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.choice-card{min-height:142px;padding:20px;border-radius:18px;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.choice-card:hover{transform:translateY(-3px);border-color:#83c9cc;box-shadow:0 12px 28px #168c9618}
+.choice-card>b{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--primary);font-size:20px}
+.choice-card strong{font:750 15px 'Plus Jakarta Sans',sans-serif;margin-top:12px}
+.choice-card small{line-height:1.5}
+.choice-card em{font-weight:700;color:var(--primary);margin-top:10px}
+.choice-card.selected,.date-card.selected,.slot.selected{border-color:var(--primary);background:linear-gradient(145deg,#e7f5f5,#f7fcfc);box-shadow:0 0 0 3px #168c9612}
+.step-hint{color:var(--muted);margin:0 0 18px}
+.date-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:12px}
+.date-card,.slot{border-radius:14px;padding:14px 10px;transition:all .18s ease}
+.date-card:hover,.slot:hover{border-color:#83c9cc;transform:translateY(-2px)}
+.date-card small,.date-card span{color:var(--muted);text-transform:capitalize}
+.date-card strong{font:800 24px 'Plus Jakarta Sans',sans-serif;margin:3px 0}
+.slot-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.slot{font-weight:750;color:var(--ink)}
+.form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.form-grid label{color:var(--ink)}
+.form-grid input{min-height:46px;background:#fbfefe;border-radius:12px;outline:none;transition:border-color .2s,box-shadow .2s}
+.form-grid input:focus{border-color:var(--primary);box-shadow:0 0 0 3px #168c9618}
+.summary-card{max-width:650px;margin:auto;padding:clamp(18px,3vw,28px);border-radius:18px;background:linear-gradient(145deg,#f1fafa,#fff);border:1px solid #d8eeee}
+.summary-card h3{font:800 22px 'Plus Jakarta Sans',sans-serif;margin:8px 0 16px}
+.summary-card ul{display:grid;gap:10px;list-style:none;padding:0}
+.summary-card li{padding:10px 12px;border-radius:10px;background:#fff;color:var(--muted)}
+.summary-card li strong{color:var(--ink)}
+.success-panel{max-width:680px;margin:auto;padding:34px 12px}
+.success-icon{display:grid;place-items:center;width:58px;height:58px;margin:0 auto 16px;border-radius:50%;background:#e5f7ef;color:#16865b;font-size:30px;font-weight:800}
+.success-panel h3{font:800 26px 'Plus Jakarta Sans',sans-serif}
+.empty-state{text-align:center;padding:42px 16px;border-radius:16px;background:#f7fbfb}
+.empty-state h3{font:800 20px 'Plus Jakarta Sans',sans-serif;margin:0 0 8px}
+.empty-state p{color:var(--muted);margin:0}
+.agendar-actions .btn{min-width:130px;min-height:44px;border-radius:12px}
+.agendar-actions .btn:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:900px){.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.agendar-page{padding-top:28px}.choice-grid,.form-grid{grid-template-columns:1fr}.stepper{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.stepper li{justify-content:flex-start}.agendar-panel{padding:16px}.agendar-actions .btn{flex:1}}
