@@ -89,8 +89,8 @@ export function initDashboardChrome({ user, navItems, activeLabel }) {
         const iconSvg = icon(iconName, { size: 18 });
         const isActive = item.label === activeLabel;
         return `
-          <a href="${appPath(item.href)}" 
-             class="dash-nav-link${isActive ? ' active' : ''}" 
+          <a href="${appPath(item.href)}"
+             class="dash-nav-link${isActive ? ' active' : ''}"
              ${isActive ? 'aria-current="page"' : ''}
              title="${escapeHtml(item.label)}"
              data-nav-item="${escapeHtml(item.label)}">

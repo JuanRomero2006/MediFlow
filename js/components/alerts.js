@@ -17,9 +17,9 @@ const TYPE_ICONS = {
 
 /**
  * Muestra una alerta estática dentro de un contenedor específico
- * @param {HTMLElement} container 
- * @param {string} message 
- * @param {'error'|'success'|'warning'|'info'} [type='error'] 
+ * @param {HTMLElement} container
+ * @param {string} message
+ * @param {'error'|'success'|'warning'|'info'} [type='error']
  */
 export function showAlert(container, message, type = 'error') {
   if (!container) return;
@@ -35,7 +35,7 @@ export function showAlert(container, message, type = 'error') {
 
 /**
  * Limpia la alerta del contenedor
- * @param {HTMLElement} container 
+ * @param {HTMLElement} container
  */
 export function clearAlert(container) {
   if (container) container.innerHTML = '';

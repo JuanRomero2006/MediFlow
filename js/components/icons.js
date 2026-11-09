@@ -219,14 +219,14 @@ const EMOJI_MAP = {
 
 /**
  * Devuelve el icono Lucide adecuado para un ítem de navegación o texto legacy
- * @param {string} rawIcon 
+ * @param {string} rawIcon
  * @param {string} [label]
  * @returns {string} Nombre del icono Lucide
  */
 export function resolveIconName(rawIcon, label = '') {
   if (LUCIDE_ICONS[rawIcon]) return rawIcon;
   if (EMOJI_MAP[rawIcon]) return EMOJI_MAP[rawIcon];
-  
+
   const l = label.toLowerCase();
   if (l.includes('dashboard')) return 'layout-dashboard';
   if (l.includes('cita') || l.includes('agenda')) return 'calendar';
@@ -242,7 +242,7 @@ export function resolveIconName(rawIcon, label = '') {
 
 /**
  * Escanea el contenedor y reemplaza elementos con [data-icon="name"]
- * @param {HTMLElement|Document} container 
+ * @param {HTMLElement|Document} container
  */
 export function replaceIconPlaceholders(container = document) {
   container.querySelectorAll('[data-icon]').forEach((el) => {
