@@ -29,6 +29,21 @@ const receptionHtml = await fs.readFile(path.join(root, 'pages/recepcion/dashboa
 const doctorHtml = await fs.readFile(path.join(root, 'pages/medico/dashboard.html'), 'utf8');
 const adminHtml = await fs.readFile(path.join(root, 'pages/administrador/dashboard.html'), 'utf8');
 const tvHtml = await fs.readFile(path.join(root, 'pages/recepcion/pantalla-turnos.html'), 'utf8');
+const patientTurnsHtml = await fs.readFile(path.join(root, 'pages/paciente/turnos.html'), 'utf8');
+const patientScript = await fs.readFile(path.join(root, 'js/pages/paciente.js'), 'utf8');
+const receptionScript = await fs.readFile(path.join(root, 'js/pages/recepcion.js'), 'utf8');
+const turnosApi = await fs.readFile(path.join(root, 'api/turnos.php'), 'utf8');
+const turnosService = await fs.readFile(path.join(root, 'js/services/turnos.js'), 'utf8');
+const revealScript = await fs.readFile(path.join(root, 'js/components/scroll-reveal.js'), 'utf8');
+const designSystemCss = await fs.readFile(path.join(root, 'css/design-system.css'), 'utf8');
+const publicPagesCss = await fs.readFile(path.join(root, 'css/pages/public-pages.css'), 'utf8');
+const catalogApi = await fs.readFile(path.join(root, 'api/catalogo.php'), 'utf8');
+const apiHelpers = await fs.readFile(path.join(root, 'api/config/funciones.php'), 'utf8');
+const bookingScript = await fs.readFile(path.join(root, 'js/pages/agendar.js'), 'utf8');
+const bookingCss = await fs.readFile(path.join(root, 'css/pages/agendar.css'), 'utf8');
+const demoScheduleSql = await fs.readFile(path.join(root, 'database/04_horarios_demo.sql'), 'utf8');
+const databaseSchema = await fs.readFile(path.join(root, 'database/01_clinica_previred.sql'), 'utf8');
+const { nextDays } = await import(pathToFileURL(path.join(root, 'js/utils/helpers.js')).href);
 
 // Comprobaciones estructurales
 assert('Paciente dashboard contiene app-shell', patientHtml.includes('id="app-shell"'));
@@ -46,6 +61,45 @@ assert('Recepción dashboard contiene app-shell y sidebar', receptionHtml.includ
 assert('Médico dashboard contiene app-shell y sidebar', doctorHtml.includes('id="app-shell"') && doctorHtml.includes('id="app-sidebar"'));
 assert('Administrador dashboard contiene app-shell y sidebar', adminHtml.includes('id="app-shell"') && adminHtml.includes('id="app-sidebar"'));
 assert('Pantalla de turnos TV contiene app-shell y sidebar', tvHtml.includes('id="app-shell"') && tvHtml.includes('id="app-sidebar"'));
+assert('Los cuatro dashboards usan bienvenida y navegación por rol', [patientHtml, receptionHtml, doctorHtml, adminHtml].every((html) => html.includes('class="dashboard-welcome"')));
+assert('Recepción muestra turnos con datos del backend', receptionHtml.includes('data-stat-turnos') && receptionScript.includes("listTurnosBackend({ fecha: todayISO() })"));
+assert('Errores de consulta de turnos se muestran en el dashboard', receptionScript.includes('No fue posible consultar los turnos'));
+assert('Paciente dispone de check-in virtual para citas activas de hoy', patientTurnsHtml.includes('data-checkin-citas') && patientScript.includes('crearTurnoVirtualBackend') && patientScript.includes("['pendiente', 'confirmada'].includes(cita.estado)"));
+assert('API de check-in limita el turno a una cita propia del día', turnosApi.includes('"checkin_virtual"') && turnosApi.includes('(int) $cita["paciente_id"] !== (int) $usuario["pacienteId"]') && turnosApi.includes('(string) $cita["fecha_cita"] !== date("Y-m-d")'));
+assert('Check-in es idempotente y la base impide turnos repetidos por cita', turnosApi.includes('WHERE t.cita_id = ? AND t.paciente_id = ? LIMIT 1') && turnosApi.includes('"Esta cita ya tiene un turno."') && databaseSchema.includes('UNIQUE KEY uq_turno_cita (cita_id)'));
+assert('Servicio frontend envía check-in virtual al backend', turnosService.includes("body: { accion: 'checkin_virtual', citaId: Number(citaId) }"));
+assert('El estado del turno del paciente se refresca automáticamente', patientScript.includes('setInterval(() => renderTurnos(user), 10000)'));
+assert('Los números de turno se generan bajo bloqueo de la sede', turnosApi.includes('FOR UPDATE') && turnosApi.includes("MAX(CASE WHEN numero_turno REGEXP '^T[0-9]+$'"));
+assert('Próximas citas de paciente excluyen citas pasadas y canceladas', patientScript.includes("c.fecha >= todayISO()") && patientScript.includes("!['cancelada', 'atendida', 'no_asistio'].includes(c.estado)"));
+assert('Limitaciones clínicas se documentan en los dashboards', patientHtml.includes('historial clínico') && doctorHtml.includes('no persiste diagnósticos') && adminHtml.includes('reportes no están implementados'));
+assert('Las animaciones al desplazarse usan IntersectionObserver y revelan cada elemento una sola vez', revealScript.includes('new IntersectionObserver') && revealScript.includes('currentObserver.unobserve(entry.target)'));
+assert('Los elementos siguen visibles si IntersectionObserver no está disponible', revealScript.includes("!('IntersectionObserver' in window)") && designSystemCss.includes('html.motion-ready [data-scroll-reveal]:not(.is-visible)'));
+assert('Las animaciones respetan prefers-reduced-motion', revealScript.includes("prefers-reduced-motion: reduce") && designSystemCss.includes('@media (prefers-reduced-motion: reduce)'));
+assert('Las imágenes de tarjetas tienen zoom contenido', publicPagesCss.includes('.public-card:hover img{transform:scale(1.045)') && publicPagesCss.includes('overflow:hidden'));
+assert('El selector consulta las fechas disponibles antes de habilitarlas', bookingScript.includes("tipo: 'fechas'") && bookingScript.includes('fechasDisponibles.has(d.iso)') && bookingScript.includes('disabled'));
+assert('La API limita fechas al cupo restante por médico y franja', apiHelpers.includes('GROUP BY c.fecha_cita, c.hora_cita') && apiHelpers.includes('cargar_ocupacion_agendamiento'));
+assert('La API ofrece disponibilidad por rango de fechas', catalogApi.includes('$tipo === "fechas"') && catalogApi.includes('generar_slots_agendamiento'));
+assert('El endpoint horario incluye el día requerido por el cálculo de cupos', catalogApi.includes('SELECT hm.horario_id, hm.dia_semana, hm.hora_inicio'));
+assert('El catálogo no ofrece profesionales sin horarios válidos activos', catalogApi.includes('JOIN horario_medico hm ON hm.medico_id = m.medico_id') && catalogApi.includes("hm.dia_semana IN ('Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo')"));
+assert('El catálogo de especialidades solo cuenta médicos con agenda válida', catalogApi.includes('JOIN medico_especialidad me ON me.especialidad_id = e.especialidad_id') && catalogApi.includes('COUNT(DISTINCT m.medico_id) AS total_medicos'));
+assert('Las fechas completas retornan al selector y actualizan la disponibilidad', bookingScript.includes('Ese día se ocupó mientras seleccionabas') && bookingScript.includes('state.availableDates = null'));
+assert('Si un cupo se ocupa al confirmar, se refrescan los horarios y se bloquea el día completo', bookingScript.includes("error.message.includes('Ese horario acaba de ocuparse')") && bookingScript.includes('La fecha se quedó sin horarios disponibles'));
+assert('Las fechas sin cupo se muestran desactivadas', bookingCss.includes('.date-card:disabled'));
+const scheduleAssignments = demoScheduleSql.match(/FROM \(([\s\S]*?)\) AS asignacion/)?.[1] || '';
+assert('El SQL habilita tres especialistas adicionales y desactiva horarios de día inválido', [
+  'SELECT 3 AS medico_id, 2 AS especialidad_id, 1 AS sede_id',
+  'UNION ALL SELECT 5, 4, 2',
+  'UNION ALL SELECT 6, 3, 3',
+  'UNION ALL SELECT 7, 1, 1',
+].every((assignment) => scheduleAssignments.includes(assignment))
+  && !/SELECT (?:8|9),/.test(scheduleAssignments)
+  && demoScheduleSql.includes('SET activo = 0')
+  && demoScheduleSql.includes("AND dia_semana = ''"));
+const nextDateList = nextDays(3);
+const expectedNext = new Date();
+expectedNext.setDate(expectedNext.getDate() + 1);
+const localIso = [expectedNext.getFullYear(), String(expectedNext.getMonth() + 1).padStart(2, '0'), String(expectedNext.getDate()).padStart(2, '0')].join('-');
+assert('El selector genera fechas ISO locales consecutivas', nextDateList.length === 3 && nextDateList[0].iso === localIso && nextDateList[1].iso > nextDateList[0].iso);
 
 console.log('\n--- 2. VALIDACIÓN DE COMPONENTES JS Y LÓGICA DE NAVEGACIÓN ---');
 

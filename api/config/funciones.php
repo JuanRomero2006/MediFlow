@@ -144,6 +144,97 @@ function slug_profesional(string $nombres, string $apellidos): string
     return trim(preg_replace("/[^a-z0-9]+/", "-", $texto), "-");
 }
 
+/** Resuelve los slugs públicos de agendamiento a identificadores de MySQL. */
+function resolver_ids_agendamiento(mysqli $conexion, string $medicoSlug, string $especialidadSlug): array
+{
+    $medicos = $conexion->query(
+        "SELECT m.medico_id, u.nombres, u.apellidos
+           FROM medico m JOIN usuario u ON u.usuario_id = m.medico_id
+          WHERE m.activo = 1 AND u.estado = 'activo'"
+    )->fetch_all(MYSQLI_ASSOC);
+    $medicoId = 0;
+    foreach ($medicos as $medico) {
+        if (slug_profesional((string)$medico["nombres"], (string)$medico["apellidos"]) === $medicoSlug) {
+            $medicoId = (int)$medico["medico_id"];
+            break;
+        }
+    }
+
+    $especialidades = $conexion->query("SELECT especialidad_id, nombre FROM especialidad WHERE activo = 1")->fetch_all(MYSQLI_ASSOC);
+    $especialidadId = 0;
+    foreach ($especialidades as $especialidad) {
+        if (slug_profesional((string)$especialidad["nombre"], "") === $especialidadSlug) {
+            $especialidadId = (int)$especialidad["especialidad_id"];
+            break;
+        }
+    }
+
+    return [$medicoId, $especialidadId];
+}
+
+/** Agrupa las citas que consumen cupo por médico, fecha y hora, igual que la regla de negocio. */
+function cargar_ocupacion_agendamiento(mysqli $conexion, int $medicoId, string $desde, string $hasta): array
+{
+    $stmt = $conexion->prepare(
+        "SELECT c.fecha_cita, c.hora_cita, COUNT(*) AS ocupados
+           FROM cita c
+           JOIN horario_medico hm ON hm.horario_id = c.horario_id
+          WHERE hm.medico_id = ? AND c.fecha_cita BETWEEN ? AND ? AND c.estado <> 'cancelada'
+          GROUP BY c.fecha_cita, c.hora_cita"
+    );
+    $stmt->bind_param("iss", $medicoId, $desde, $hasta);
+    $stmt->execute();
+    $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    $ocupacion = [];
+    foreach ($rows as $row) {
+        $ocupacion[(string)$row["fecha_cita"]][(string)$row["hora_cita"]] = (int)$row["ocupados"];
+    }
+    return $ocupacion;
+}
+
+/** Genera los cupos que el endpoint de creación también aceptará para ese médico y franja. */
+function generar_slots_agendamiento(array $horarios, array $ocupacion, DateTimeImmutable $fecha): array
+{
+    $dias = ["Monday"=>"Lunes", "Tuesday"=>"Martes", "Wednesday"=>"Miércoles", "Thursday"=>"Jueves", "Friday"=>"Viernes", "Saturday"=>"Sábado", "Sunday"=>"Domingo"];
+    $dia = $dias[$fecha->format("l")];
+    $fechaIso = $fecha->format("Y-m-d");
+    $slots = [];
+    $franjasEvaluadas = [];
+
+    foreach ($horarios as $horario) {
+        if ((string)$horario["dia_semana"] !== $dia) {
+            continue;
+        }
+        $inicio = new DateTimeImmutable($fechaIso . " " . $horario["hora_inicio"]);
+        $fin = new DateTimeImmutable($fechaIso . " " . $horario["hora_fin"]);
+        $duracion = max(5, (int)$horario["duracion_cita_min"]);
+
+        while ($inicio->modify("+{$duracion} minutes") <= $fin) {
+            $hora = $inicio->format("H:i:s");
+            $clave = $fechaIso . "|" . $hora;
+
+            if (!isset($franjasEvaluadas[$clave])) {
+                $franjasEvaluadas[$clave] = true;
+                $esFuturo = $fechaIso > date("Y-m-d") || $hora > date("H:i:s");
+                $ocupados = (int)($ocupacion[$fechaIso][$hora] ?? 0);
+                $disponibles = (int)$horario["cupo_maximo"] - $ocupados;
+
+                if ($esFuturo && $disponibles > 0) {
+                    $slots[] = [
+                        "hora" => date("h:i A", strtotime($hora)),
+                        "disponibles" => $disponibles,
+                    ];
+                }
+            }
+            $inicio = $inicio->modify("+{$duracion} minutes");
+        }
+    }
+
+    return $slots;
+}
+
 /**
  * Busca al usuario y lo devuelve como lo usa el front:
  * { id, email, username, nombres, apellidos, nombreCompleto, rol, medicoId, pacienteId }

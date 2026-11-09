@@ -7,7 +7,7 @@
   <title>MediFlow | Atención médica más cerca de ti</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/pages/public-pages.css">
 </head>
@@ -49,71 +49,94 @@
     </div>
   </div>
 </header>
-<main>
-  <section class="hero">
+<main id="contenido">
+  <section class="hero home-hero">
     <div class="container hero-grid">
       <div class="hero-copy">
-        <span class="pill">Cuidado y orientación en un solo lugar</span>
-        <h1>Tu salud, más cerca y más fácil.</h1>
-        <p>Conoce nuestros servicios, encuentra profesionales certificados y accede al sistema integrado de citas y turnos de MediFlow.</p>
+        <span class="pill"><span data-icon="heart-pulse" data-icon-size="16" aria-hidden="true"></span> Atención organizada en un solo lugar</span>
+        <h1>Una experiencia de atención más clara, desde el primer paso.</h1>
+        <p>MediFlow reúne la consulta de servicios, el agendamiento y la gestión de citas y turnos en una plataforma sencilla para pacientes y equipos de atención.</p>
         <div class="hero-buttons">
           <a class="btn large" href="pages/agendar.html">Solicitar una cita</a>
-          <a class="btn large outline" href="pages/servicios.html">Explorar servicios</a>
+          <a class="btn large outline" href="pages/login.html"><span data-icon="log-in" data-icon-size="18" aria-hidden="true"></span> Iniciar sesión</a>
         </div>
-        <dl class="stats">
-          <div><dt>Atención</dt><dd>Organizada</dd></div>
-          <div><dt>Acceso</dt><dd>En línea</dd></div>
-          <div><dt>Neiva</dt><dd>Huila, Colombia</dd></div>
-        </dl>
+        <ul class="home-proof-list" aria-label="Funciones de MediFlow">
+          <li><span data-icon="calendar-check" data-icon-size="18" aria-hidden="true"></span> Citas médicas</li>
+          <li><span data-icon="ticket" data-icon-size="18" aria-hidden="true"></span> Turnos virtuales</li>
+          <li><span data-icon="users" data-icon-size="18" aria-hidden="true"></span> Acceso por perfil</li>
+        </ul>
       </div>
       <div class="hero-image-wrap">
-        <img src="assets/images/backgrounds/hero-doctor.jpg" alt="Profesional de salud en un consultorio moderno">
-        <div class="floating availability">
-          <small>Plataforma MediFlow</small>
-          <strong class="badge badge-success">✓ Citas y turnos</strong>
-          <p>Acceso según tu perfil</p>
+        <img src="assets/images/backgrounds/hero-doctor.jpg" alt="Profesional de salud en un consultorio moderno" fetchpriority="high">
+        <div class="floating home-hero-note">
+          <span class="home-hero-note-icon" data-icon="shield-plus" data-icon-size="20" aria-hidden="true"></span>
+          <span><strong>Tu atención, mejor organizada</strong><small>Información y herramientas reunidas en MediFlow.</small></span>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section container">
+  <section class="section container home-services" aria-labelledby="services-title">
     <div class="intro">
-      <span>Explora MediFlow</span>
-      <h2>Encuentra lo que necesitas</h2>
-      <p>La información está organizada en módulos independientes para que puedas llegar directamente a cada área de atención.</p>
+      <span>Servicios de la plataforma</span>
+      <h2 id="services-title">Lo esencial para gestionar tu atención</h2>
+      <p>Accede rápidamente a las funciones disponibles en el sistema.</p>
     </div>
     <div class="cards services">
       <article class="card">
-        <b class="icon" data-icon="shield-plus" data-icon-size="24"></b>
-        <h3>Servicios médicos</h3>
-        <p>Consulta información de los servicios de consulta externa y procedimientos disponibles.</p>
-        <a href="pages/servicios.html">Ver servicios →</a>
+        <b class="icon" data-icon="calendar-check" data-icon-size="24" aria-hidden="true"></b>
+        <h3>Agenda y citas</h3>
+        <p>Consulta la disponibilidad y sigue el flujo de agendamiento de MediFlow.</p>
+        <a href="pages/agendar.html">Explorar agendamiento <span aria-hidden="true">→</span></a>
       </article>
       <article class="card">
-        <b class="icon" data-icon="heart-pulse" data-icon-size="24"></b>
-        <h3>Especialidades</h3>
-        <p>Explora especialidades médicas de primer nivel y encuentra la atención que requieres.</p>
-        <a href="pages/especialidades.html">Ver especialidades →</a>
+        <b class="icon" data-icon="heart-pulse" data-icon-size="24" aria-hidden="true"></b>
+        <h3>Servicios y especialidades</h3>
+        <p>Conoce las áreas y la información de referencia disponibles en el proyecto.</p>
+        <a href="pages/especialidades.html">Ver especialidades <span aria-hidden="true">→</span></a>
       </article>
       <article class="card">
-        <b class="icon" data-icon="calendar" data-icon-size="24"></b>
-        <h3>Agendamiento</h3>
-        <p>Accede al flujo guiado para agendar tu cita médica con disponibilidad en tiempo real.</p>
-        <a href="pages/agendar.html">Agendar cita →</a>
+        <b class="icon" data-icon="ticket" data-icon-size="24" aria-hidden="true"></b>
+        <h3>Turnos virtuales</h3>
+        <p>Consulta y gestiona los turnos desde los módulos correspondientes a cada perfil.</p>
+        <a href="pages/login.html">Acceder a la plataforma <span aria-hidden="true">→</span></a>
       </article>
     </div>
   </section>
 
-  <section class="section shaded">
-    <div class="container feature-band">
-      <div>
-        <span class="eyebrow">Plataforma clínica integral</span>
-        <h2>Más claridad en cada paso.</h2>
-        <p>Gestiona tu atención desde el módulo correspondiente. Pacientes, recepción, médicos y administradores cuentan con herramientas diseñadas para su flujo de trabajo.</p>
-        <a class="btn" href="pages/login.html">Entrar a MediFlow</a>
+  <section class="section home-roles" aria-labelledby="roles-title">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Un espacio para cada equipo</span>
+        <h2 id="roles-title">Herramientas según tu rol</h2>
+        <p>Inicia sesión y MediFlow te dirigirá al panel disponible para tu cuenta.</p>
       </div>
-      <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=85" alt="Profesional de salud conversando con un paciente" loading="lazy">
+      <div class="home-role-grid">
+        <article class="home-role-card"><span class="home-role-icon" data-icon="user-round" data-icon-size="22" aria-hidden="true"></span><h3>Paciente</h3><p>Consulta citas, turnos y la información de tu perfil.</p><a href="pages/login.html">Acceder <span aria-hidden="true">→</span></a></article>
+        <article class="home-role-card"><span class="home-role-icon" data-icon="clipboard-list" data-icon-size="22" aria-hidden="true"></span><h3>Recepción</h3><p>Revisa citas, pacientes y turnos de atención.</p><a href="pages/login.html">Acceder <span aria-hidden="true">→</span></a></article>
+        <article class="home-role-card"><span class="home-role-icon" data-icon="stethoscope" data-icon-size="22" aria-hidden="true"></span><h3>Médico</h3><p>Consulta agenda y pacientes asociados a tus citas.</p><a href="pages/login.html">Acceder <span aria-hidden="true">→</span></a></article>
+        <article class="home-role-card"><span class="home-role-icon" data-icon="settings" data-icon-size="22" aria-hidden="true"></span><h3>Administración</h3><p>Consulta usuarios y opciones administrativas disponibles.</p><a href="pages/login.html">Acceder <span aria-hidden="true">→</span></a></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section home-benefits" aria-labelledby="benefits-title">
+    <div class="container feature-band">
+      <div class="home-benefits-copy">
+        <span class="eyebrow">Una experiencia simple</span>
+        <h2 id="benefits-title">Menos pasos para encontrar lo que buscas.</h2>
+        <p>La navegación de MediFlow separa los servicios públicos de las herramientas internas y organiza cada flujo según el perfil del usuario.</p>
+        <ul class="home-benefit-list">
+          <li><span data-icon="check-circle" data-icon-size="18" aria-hidden="true"></span> Consulta los servicios antes de iniciar sesión.</li>
+          <li><span data-icon="check-circle" data-icon-size="18" aria-hidden="true"></span> Accede a citas y turnos desde un mismo lugar.</li>
+          <li><span data-icon="check-circle" data-icon-size="18" aria-hidden="true"></span> Encuentra rápidamente las herramientas de tu perfil.</li>
+        </ul>
+        <a class="btn" href="pages/servicios.html">Conocer MediFlow <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="home-benefits-image">
+        <img src="assets/images/backgrounds/hero-doctor.jpg" alt="Atención médica en un entorno profesional" loading="lazy">
+        <div class="home-image-caption"><span data-icon="heart-pulse" data-icon-size="20" aria-hidden="true"></span><span><strong>MediFlow</strong><small>Gestión clínica y atención organizada</small></span></div>
+      </div>
     </div>
   </section>
 </main>
@@ -125,7 +148,7 @@
         <span class="brand-mark" data-icon="heart-pulse"></span>
         <span>MediFlow</span>
       </a>
-      <p>Plataforma para organizar citas y turnos médicos. Inspirada en el modelo de atención de Clínica Previred, Neiva, Huila.</p>
+      <p>Plataforma académica para organizar citas y turnos médicos. MediFlow mantiene su propia identidad y no representa oficialmente a otra institución.</p>
     </div>
     <div>
       <strong>Explorar</strong>
@@ -135,13 +158,13 @@
       <a href="pages/profesionales.html">Profesionales</a>
     </div>
     <div>
-      <strong>Acceso</strong>
+      <strong>Plataforma</strong>
       <a href="pages/agendar.html">Solicitar cita</a>
       <a href="pages/login.html">Iniciar sesión</a>
       <a href="pages/contacto.html">Contacto</a>
     </div>
   </div>
-  <div class="container copyright">© MediFlow · Caso de estudio Previred, Neiva, Huila. Todos los derechos reservados.</div>
+  <div class="container copyright">© MediFlow · Proyecto académico de demostración. La información no sustituye la orientación de un profesional de salud.</div>
 </footer>
 
 <aside class="chat" aria-live="polite">

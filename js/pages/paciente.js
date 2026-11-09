@@ -1,6 +1,6 @@
 import { requireAuth } from '../services/auth.js';
 import { listCitasBackend, actualizarCitaBackend } from '../services/citas.js';
-import { listTurnosBackend } from '../services/turnos.js';
+import { listTurnosBackend, crearTurnoVirtualBackend } from '../services/turnos.js?virtual-checkin';
 import { initDashboardChrome } from '../components/sidebar.js';
 import { initChatbot } from '../components/chatbot.js';
 import { formatCitaEstado, formatTurnoEstado } from '../utils/formatters.js';
@@ -14,6 +14,9 @@ const NAV = [
   { label: 'Mi perfil', href: 'pages/paciente/perfil.html', icon: '👤' },
 ];
 
+let turnosRefreshTimer = null;
+let turnosRefreshPending = false;
+
 export async function initPacientePage(page) {
   const user = await requireAuth(['paciente']);
   if (!user) return;
@@ -23,7 +26,11 @@ export async function initPacientePage(page) {
 
   if (page === 'Dashboard') renderDashboard(user);
   if (page === 'Mis citas') renderCitas(user);
-  if (page === 'Turnos') await renderTurnos(user);
+  if (page === 'Turnos') {
+    await renderTurnos(user);
+    window.clearInterval(turnosRefreshTimer);
+    turnosRefreshTimer = window.setInterval(() => renderTurnos(user), 10000);
+  }
   if (page === 'Mi perfil') renderPerfil(user);
 }
 
@@ -31,7 +38,9 @@ async function renderDashboard(user) {
   let citas;
   try { citas = await listCitasBackend({ pacienteId: user.pacienteId }); }
   catch (error) { showAlert(qs('#page-alert'), error.message, 'error'); return; }
-  const proximas = citas.filter((c) => c.estado !== 'cancelada').slice(0, 2);
+  const proximas = citas
+    .filter((c) => !['cancelada', 'atendida', 'no_asistio'].includes(c.estado) && c.fecha >= todayISO())
+    .sort((a, b) => a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora));
   qs('[data-greeting]')?.replaceChildren(document.createTextNode(`Hola, ${user.nombres} 👋`));
   qs('[data-stat-citas]')?.replaceChildren(document.createTextNode(String(proximas.length)));
   const next = proximas[0];
@@ -43,7 +52,7 @@ async function renderDashboard(user) {
   }
   const list = qs('[data-citas-list]');
   if (list) {
-    list.innerHTML = proximas
+    list.innerHTML = proximas.slice(0, 2)
       .map((c) => cardCita(c, user))
       .join('') || '<p>No tienes citas próximas registradas.</p>';
     bindCitaActions(user, citas);
@@ -108,23 +117,65 @@ function bindCitaActions(user, citasActuales) {
 
 async function renderTurnos(user) {
   const box = qs('[data-turno-actual]');
-  if (!box) return;
+  const appointmentsBox = qs('[data-checkin-citas]');
+  if (!box || !appointmentsBox || turnosRefreshPending) return;
+  turnosRefreshPending = true;
   try {
-    const turnos = await listTurnosBackend({ fecha: todayISO(), pacienteId: user.pacienteId });
-    const current = turnos.find((t) => !['atendido', 'cancelado', 'no_presento'].includes(t.estado));
+    const [turnos, citas] = await Promise.all([
+      listTurnosBackend({ fecha: todayISO(), pacienteId: user.pacienteId }),
+      listCitasBackend({ fecha: todayISO(), pacienteId: user.pacienteId }),
+    ]);
+    const current = turnos.find((t) => ['generado', 'en_espera', 'llamado', 'en_atencion'].includes(t.estado));
     if (!current) {
-      box.textContent = 'No tienes turnos activos registrados para hoy.';
-      return;
+      box.textContent = 'Aún no tienes un turno activo para hoy.';
+    } else {
+      const st = formatTurnoEstado(current.estado);
+      box.classList.add('turno-panel');
+      box.innerHTML = `<p class="turno-num">${escapeHtml(current.numero)}</p>
+        <p>Estado: <span class="badge ${st.className}">${st.label}</span></p>
+        <p>${escapeHtml(current.sede)} · ${escapeHtml(current.modulo || 'Módulo por asignar')}</p>
+        <p class="hint">Este turno se actualiza automáticamente mientras recepción gestiona la fila.</p>`;
     }
-    const st = formatTurnoEstado(current.estado);
-    box.classList.add('turno-panel');
-    box.innerHTML = `<p class="turno-num">${escapeHtml(current.numero)}</p>
-      <p>Estado: <span class="badge ${st.className}">${st.label}</span></p>
-      <p>${escapeHtml(current.sede)} · ${escapeHtml(current.modulo || 'Módulo por asignar')}</p>
-      <p class="hint">La información se consulta directamente desde la base de datos.</p>`;
+
+    const citasElegibles = citas.filter((cita) => ['pendiente', 'confirmada'].includes(cita.estado));
+    appointmentsBox.innerHTML = citasElegibles.length
+      ? citasElegibles.map((cita) => {
+        const turno = turnos.find((item) => Number(item.citaId) === Number(cita.id));
+        if (turno) {
+          const estadoTurno = formatTurnoEstado(turno.estado);
+          return `<article class="virtual-checkin-item">
+            <div><strong>${escapeHtml(cita.especialidad)} · ${escapeHtml(cita.hora)}</strong>
+              <span>${escapeHtml(cita.profesional)} · ${escapeHtml(cita.sede)}</span></div>
+            <p>Turno ${escapeHtml(turno.numero)} · <span class="badge ${estadoTurno.className}">${estadoTurno.label}</span></p>
+          </article>`;
+        }
+        return `<article class="virtual-checkin-item">
+          <div><strong>${escapeHtml(cita.especialidad)} · ${escapeHtml(cita.hora)}</strong>
+            <span>${escapeHtml(cita.profesional)} · ${escapeHtml(cita.sede)}</span></div>
+          <button type="button" class="btn primary small" data-checkin-cita="${escapeHtml(cita.id)}">Hacer check-in</button>
+        </article>`;
+      }).join('')
+      : '<p class="virtual-checkin-empty">No tienes citas activas para hoy. El check-in estará disponible el día de tu cita.</p>';
+
+    appointmentsBox.querySelectorAll('[data-checkin-cita]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        try {
+          const result = await crearTurnoVirtualBackend(button.dataset.checkinCita);
+          showAlert(qs('#page-alert'), result.message || 'Turno virtual generado.', 'success');
+          await renderTurnos(user);
+        } catch (error) {
+          button.disabled = false;
+          showAlert(qs('#page-alert'), error.message, 'error');
+        }
+      });
+    });
   } catch (error) {
     box.textContent = error.message || 'No fue posible consultar tu turno.';
+    appointmentsBox.textContent = 'No fue posible cargar tus citas de hoy.';
     showAlert(qs('#page-alert'), error.message, 'error');
+  } finally {
+    turnosRefreshPending = false;
   }
 }
 

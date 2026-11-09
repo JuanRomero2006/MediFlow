@@ -138,3 +138,10 @@ export async function listTurnosBackend(filters = {}) {
 export async function actualizarTurnoBackend(turnoId, estado) {
   return apiFetch('turnos.php', { method: 'POST', body: { turnoId: Number(turnoId), estado } });
 }
+
+export async function crearTurnoVirtualBackend(citaId) {
+  return apiFetch('turnos.php', {
+    method: 'POST',
+    body: { accion: 'checkin_virtual', citaId: Number(citaId) },
+  });
+}

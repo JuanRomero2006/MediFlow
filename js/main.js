@@ -1,4 +1,5 @@
-import { replaceIconPlaceholders } from './components/icons.js';
+import { icon, replaceIconPlaceholders } from './components/icons.js';
+import { initScrollReveal } from './components/scroll-reveal.js';
 
 const page = document.body.dataset.page;
 
@@ -12,12 +13,26 @@ async function boot() {
     case 'public': {
       const button = document.querySelector('.menu-button');
       const menu = document.querySelector('.mobile-menu');
-      if (button && menu) button.addEventListener('click', () => {
-        const opened = menu.classList.toggle('open');
-        button.setAttribute('aria-expanded', String(opened));
-        button.textContent = opened ? '×' : '☰';
-      });
-      menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { menu.classList.remove('open'); button?.setAttribute('aria-expanded', 'false'); }));
+      if (button && menu) {
+        const setMenuOpen = (opened) => {
+          menu.classList.toggle('open', opened);
+          button.setAttribute('aria-expanded', String(opened));
+          button.setAttribute('aria-label', opened ? 'Cerrar menú' : 'Abrir menú');
+          button.innerHTML = icon(opened ? 'x' : 'menu', { size: 20 });
+        };
+
+        button.setAttribute('aria-controls', menu.id);
+        button.addEventListener('click', () => setMenuOpen(!menu.classList.contains('open')));
+        menu.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => setMenuOpen(false));
+        });
+        window.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && menu.classList.contains('open')) {
+            setMenuOpen(false);
+            button.focus();
+          }
+        });
+      }
       break;
     }
     case 'login': {
@@ -49,6 +64,9 @@ async function boot() {
 
 document.addEventListener('DOMContentLoaded', () => {
   boot()
-    .then(() => replaceIconPlaceholders())
+    .then(() => {
+      initScrollReveal();
+      replaceIconPlaceholders();
+    })
     .catch((err) => console.error(err));
 });

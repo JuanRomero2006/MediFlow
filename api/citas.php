@@ -224,17 +224,45 @@ if ($accion === "cancelar") {
     if (!$horario) responder_error("No se encontró la sede de esta cita.", 422);
     $sedeId = (int) $horario["sede_id"];
     $fechaCita = (string) $cita["fecha_cita"];
+    $pacienteId = (int) $cita["paciente_id"];
     $conexion->begin_transaction();
     try {
-        $stmt = $conexion->prepare("SELECT COUNT(*) AS total FROM turno WHERE sede_id = ? AND fecha_turno = ?");
+        $stmt = $conexion->prepare("SELECT sede_id FROM sede WHERE sede_id = ? AND activo = 1 FOR UPDATE");
+        $stmt->bind_param("i", $sedeId);
+        $stmt->execute();
+        $sedeActiva = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        if (!$sedeActiva) throw new DomainException("La sede de la cita no está disponible.");
+
+        $stmt = $conexion->prepare("SELECT turno_id FROM turno WHERE cita_id = ? LIMIT 1");
+        $stmt->bind_param("i", $citaId);
+        $stmt->execute();
+        $turnoExistente = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        if ($turnoExistente) {
+            $conexion->rollback();
+            responder_error("Esta cita ya tiene un turno registrado.", 409);
+        }
+
+        $limite = regla_valor($conexion, "Máximo de turnos por sede y fecha", 999);
+        $stmt = $conexion->prepare(
+            "SELECT COUNT(*) AS total,
+                    COALESCE(MAX(CASE WHEN numero_turno REGEXP '^T[0-9]+$'
+                                      THEN CAST(SUBSTRING(numero_turno, 2) AS UNSIGNED)
+                                      ELSE 0 END), 0) AS ultimo
+               FROM turno WHERE sede_id = ? AND fecha_turno = ?"
+        );
         $stmt->bind_param("is", $sedeId, $fechaCita);
         $stmt->execute();
-        $total = (int) $stmt->get_result()->fetch_assoc()["total"];
+        $conteo = $stmt->get_result()->fetch_assoc();
         $stmt->close();
-        $numero = "T" . str_pad((string) ($total + 1), 3, "0", STR_PAD_LEFT);
+        if ((int) $conteo["total"] >= $limite) {
+            $conexion->rollback();
+            responder_error("La sede alcanzó el límite de turnos para este día.", 409);
+        }
+        $numero = "T" . str_pad((string) ((int) $conteo["ultimo"] + 1), 3, "0", STR_PAD_LEFT);
         $estadoTurno = "en_espera";
         $stmt = $conexion->prepare("INSERT INTO turno (cita_id, paciente_id, sede_id, numero_turno, fecha_turno, estado, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $pacienteId = (int) $cita["paciente_id"];
         $observaciones = "Llegada registrada desde recepción para la cita #" . $citaId;
         $stmt->bind_param("iiissss", $citaId, $pacienteId, $sedeId, $numero, $fechaCita, $estadoTurno, $observaciones);
         $stmt->execute();
@@ -243,6 +271,7 @@ if ($accion === "cancelar") {
         $conexion->commit();
     } catch (Throwable $e) {
         $conexion->rollback();
+        if ($e instanceof DomainException) responder_error($e->getMessage(), 422);
         error_log("Error registrando llegada: " . $e->getMessage());
         responder_error("No fue posible registrar la llegada. Puede que ya exista un turno para esta cita.", 409);
     }

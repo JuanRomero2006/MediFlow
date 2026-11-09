@@ -171,8 +171,13 @@ pages = [
         "Turnos",
         "Turnos",
         """
-      <section><h1 class="dash-title">Turno virtual</h1><p class="dash-subtitle">Estado sincronizado con recepción en esta demostración (sin tiempo real).</p></section>
+      <section><h1 class="dash-title">Turno virtual</h1><p class="dash-subtitle">Haz check-in el día de tu cita y sigue el estado de tu turno mientras recepción te atiende.</p></section>
       <section class="highlight-panel" data-turno-actual></section>
+      <section class="dash-card virtual-checkin-section">
+        <h2>Citas de hoy</h2>
+        <p>El check-in virtual solo está disponible el día de una cita activa.</p>
+        <div data-checkin-citas aria-live="polite"></div>
+      </section>
 """,
     ),
     (

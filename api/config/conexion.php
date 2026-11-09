@@ -2,28 +2,60 @@
 
 declare(strict_types=1);
 
-/*
- * ARCHIVO: api/config/conexion.php
- * QUÉ HACE: abre la conexión con MySQL y la deja en la variable $conexion.
- * IDEA PARA EXPLICAR: los datos de conexión viven en un solo lugar.
- */
-
-// Lanza excepciones en vez de avisos, así el manejador de errores responde en JSON.
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-// Hora de Colombia en PHP.
 date_default_timezone_set("America/Bogota");
 
-$servidor   = "localhost";
-$usuario    = "root";        // XAMPP: root sin contraseña. En producción, crear un usuario propio.
-$contrasena = "";
-$base_datos = "clinica_previred";
+$archivo_env = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . ".env";
+$variables_archivo_env = [];
+
+if (is_file($archivo_env)) {
+    $variables_archivo_env = parse_ini_file($archivo_env, false, INI_SCANNER_RAW);
+    if ($variables_archivo_env === false) {
+        throw new RuntimeException("No se pudo leer la configuración local de la base de datos.");
+    }
+}
+
+// Las variables configuradas en el servidor tienen prioridad sobre el .env local.
+function obtenerVariable(string $nombre, string $valorPredeterminado = ''): string
+{
+    global $variables_archivo_env;
+
+    $valor = $_ENV[$nombre] ?? $_SERVER[$nombre] ?? getenv($nombre);
+
+    if ($valor === false || $valor === null) {
+        $valor = $variables_archivo_env[$nombre] ?? $valorPredeterminado;
+    }
+
+    return (string) $valor;
+}
+
+$servidor   = obtenerVariable('DB_HOST', 'localhost');
+$usuario    = obtenerVariable('DB_USERNAME', 'root');
+$contrasena = obtenerVariable('DB_PASSWORD', '');
+$base_datos = obtenerVariable('DB_DATABASE', 'clinica_previred');
+$puerto     = (int) obtenerVariable('DB_PORT', '3306');
 
 try {
-    $conexion = new mysqli($servidor, $usuario, $contrasena, $base_datos);
+    $conexion = new mysqli(
+        $servidor,
+        $usuario,
+        $contrasena,
+        $base_datos,
+        $puerto
+    );
+
     $conexion->set_charset("utf8mb4");
-    $conexion->query("SET time_zone = '-05:00'");   // hora de Colombia en MySQL
+    $conexion->query("SET time_zone = '-05:00'");
+
 } catch (mysqli_sql_exception $e) {
-    error_log($e->getMessage());
-    responder_error("No se pudo conectar con la base de datos. ¿MySQL está iniciado en XAMPP?", 500);
+
+    error_log("Error de conexión MySQL: " . $e->getMessage());
+
+    responder_error(
+        "No se pudo conectar con la base de datos. Verifica la configuración de MySQL en XAMPP.",
+        500
+    );
+
+    exit;
 }

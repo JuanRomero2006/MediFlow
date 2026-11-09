@@ -46,8 +46,13 @@ export function nextDays(count = 10) {
   for (let i = 1; i <= count; i += 1) {
     const d = new Date(base);
     d.setDate(base.getDate() + i);
+    const iso = [
+      d.getFullYear(),
+      String(d.getMonth() + 1).padStart(2, '0'),
+      String(d.getDate()).padStart(2, '0'),
+    ].join('-');
     out.push({
-      iso: d.toISOString().slice(0, 10),
+      iso,
       day: d.toLocaleDateString('es-CO', { weekday: 'short' }),
       num: String(d.getDate()),
       month: d.toLocaleDateString('es-CO', { month: 'short' }),

@@ -109,9 +109,23 @@
       <main class="app-main" id="main-content">
         <div id="page-alert"></div>
 
-      <section><h1 class="dash-title" data-greeting>Buenos días 👋</h1></section>
-      <section class="stat-grid"><article class="stat-card"><small>Citas hoy</small><strong data-stat-citas>0</strong></article><article class="stat-card"><small>Pendientes</small><strong data-stat-pendientes>0</strong></article><article class="stat-card"><small>Atendidas</small><strong>—</strong></article></section>
-      <section><h2 class="dash-title" style="font-size:1.1rem">Agenda de hoy</h2><div class="cards-grid" data-agenda-list></div></section>
+      <section class="dashboard-welcome">
+        <div><span class="dashboard-eyebrow">Espacio clínico</span><h1 class="dash-title" data-greeting>Buenos días</h1><p class="dash-subtitle">Revisa las citas y pacientes asignados a tu agenda.</p></div>
+        <div class="dashboard-welcome-actions"><a class="btn" href="agenda.html"><span data-icon="calendar" data-icon-size="17"></span> Abrir agenda</a><a class="btn outline" href="pacientes.html">Ver pacientes</a></div>
+      </section>
+      <section class="stat-grid" aria-label="Resumen de citas de hoy">
+        <article class="stat-card"><small>Citas hoy</small><strong data-stat-citas>0</strong><span class="stat-caption">En la agenda asignada para hoy</span></article>
+        <article class="stat-card"><small>Pendientes</small><strong data-stat-pendientes>0</strong><span class="stat-caption">Citas pendientes de atención</span></article>
+      </section>
+      <section class="dashboard-panel" aria-labelledby="doctor-agenda-title">
+        <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Agenda diaria</span><h2 id="doctor-agenda-title">Citas de hoy</h2></div><a href="agenda.html">Ver agenda <span aria-hidden="true">→</span></a></div>
+        <div class="cards-grid" data-agenda-list></div>
+      </section>
+      <section class="dashboard-limit" aria-label="Limitación de historia clínica">
+        <span data-icon="alert-circle" data-icon-size="18" aria-hidden="true"></span>
+        <p>La historia clínica y el guardado de notas de consulta aún no están implementados; este panel no persiste diagnósticos ni evoluciones.</p>
+        <a href="consulta.html">Ver módulo de consulta</a>
+      </section>
 
       </main>
     </div>

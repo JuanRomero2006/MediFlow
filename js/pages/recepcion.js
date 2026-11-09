@@ -45,7 +45,10 @@ async function renderDashboard() {
   try {
     const turnos = await listTurnosBackend({ fecha: todayISO() });
     qs('[data-stat-turnos]')?.replaceChildren(document.createTextNode(String(turnos.filter((t) => ['generado', 'en_espera', 'llamado', 'en_atencion'].includes(t.estado)).length)));
-  } catch { /* El panel de turnos muestra el error detallado en su propia vista. */ }
+  } catch (error) {
+    qs('[data-stat-turnos]')?.replaceChildren(document.createTextNode('—'));
+    showAlert(qs('#page-alert'), `No fue posible consultar los turnos: ${error.message}`, 'error');
+  }
   // El resumen conserva métricas del día, pero la tabla muestra citas de cualquier fecha
   // para que las reservas futuras no parezcan haber desaparecido.
   renderCitasTable('#dashboard-citas-table', '');

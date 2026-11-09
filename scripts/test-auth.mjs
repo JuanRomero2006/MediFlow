@@ -28,9 +28,15 @@ assert('normaliza rol superadmin', normalizeRole('superadmin') === 'administrado
 const api = await readFile(path.join(root, 'js/services/api.js'), 'utf8');
 const phpLogin = await readFile(path.join(root, 'api/login.php'), 'utf8');
 const phpMe = await readFile(path.join(root, 'api/me.php'), 'utf8');
+const phpEstado = await readFile(path.join(root, 'api/estado.php'), 'utf8');
+const phpConexion = await readFile(path.join(root, 'api/config/conexion.php'), 'utf8');
 assert('frontend usa fetch con sesión same-origin', api.includes("credentials: 'same-origin'"));
 assert('login valida contraseña con password_verify', phpLogin.includes('password_verify'));
 assert('sesión PHP se consulta desde me.php', phpMe.includes('$_SESSION["usuario_id"]'));
+assert('diagnóstico consulta MySQL por la API existente', phpEstado.includes('information_schema.tables'));
+assert('conexión carga la configuración local ignorada por Git', phpConexion.includes("parse_ini_file($archivo_env"));
+assert('strict_types es la primera declaración PHP', /^<\?php\s+declare\(strict_types=1\);/.test(phpConexion));
+assert('la conexión no fuerza errores PHP al cuerpo JSON', !/ini_set\(['"]display_errors['"],\s*['"]1['"]\)/.test(phpConexion));
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

@@ -3,6 +3,7 @@ import { getCurrentUser } from '../services/auth.js';
 import { nextDays, qs, qsa, appPath, escapeHtml } from '../utils/helpers.js';
 import { showAlert, clearAlert } from '../components/alerts.js';
 import { initChatbot } from '../components/chatbot.js';
+import { initScrollReveal } from '../components/scroll-reveal.js';
 
 const steps = ['Especialidad', 'Profesional', 'Fecha', 'Horario', 'Paciente', 'Confirmación'];
 const query = (values) => new URLSearchParams(values).toString();
@@ -19,6 +20,8 @@ export async function initAgendarPage() {
     specialties: [],
     professionals: [],
     slots: [],
+    availableDates: null,
+    availabilityMessage: '',
     patient: { nombre: '', documento: '', telefono: '', email: '' },
   };
 
@@ -65,6 +68,17 @@ export async function initAgendarPage() {
     state.slots = data.horarios || [];
   }
 
+  async function loadAvailableDates(days) {
+    const data = await apiFetch(`catalogo.php?${query({
+      tipo: 'fechas',
+      medico: state.professionalId,
+      especialidad: state.specialty,
+      desde: days[0].iso,
+      dias: days.length,
+    })}`);
+    state.availableDates = new Set(data.fechas || []);
+  }
+
   async function renderPanel() {
     clearAlert(alertBox);
     btnNext.disabled = false;
@@ -78,7 +92,10 @@ export async function initAgendarPage() {
         qsa('[data-specialty]', panel).forEach((button) => button.addEventListener('click', async () => {
           state.specialty = button.dataset.specialty;
           state.professionalId = null;
+          state.date = null;
           state.time = null;
+          state.availableDates = null;
+          state.slots = [];
           try { await loadProfessionals(); renderPanel(); }
           catch (error) { showAlert(alertBox, error.message, 'error'); }
         }));
@@ -91,25 +108,65 @@ export async function initAgendarPage() {
           : '<p>No hay profesionales activos asociados a esta especialidad.</p>';
         qsa('[data-prof]', panel).forEach((button) => button.addEventListener('click', () => {
           state.professionalId = button.dataset.prof;
+          state.date = null;
+          state.time = null;
+          state.availableDates = null;
+          state.slots = [];
           renderPanel();
         }));
         break;
       case 2: {
         const days = nextDays(21);
-        panel.innerHTML = `<p class="step-hint">Selecciona el día en el que deseas asistir.</p><div class="date-grid">${days.map((d) =>
-          `<button type="button" class="date-card${state.date === d.iso ? ' selected' : ''}" data-date="${d.iso}"><small>${d.day}</small><strong>${d.num}</strong><span>${d.month}</span></button>`
-        ).join('')}</div>`;
+        try {
+          await loadAvailableDates(days);
+        } catch (error) {
+          state.availableDates = null;
+          btnNext.disabled = true;
+          panel.innerHTML = '<div class="empty-state"><h3>No fue posible verificar los horarios</h3><p>Vuelve a intentarlo para consultar las fechas disponibles.</p><button type="button" class="btn outline" data-retry-dates>Reintentar</button></div>';
+          qsa('[data-retry-dates]', panel).forEach((button) => button.addEventListener('click', () => renderPanel()));
+          state.availabilityMessage = `No fue posible comprobar la disponibilidad. ${error.message}`;
+          break;
+        }
+
+        const fechasDisponibles = state.availableDates;
+        const hayFechasDisponibles = fechasDisponibles.size > 0;
+        btnNext.disabled = true;
+        panel.innerHTML = `<p class="step-hint">Selecciona una fecha con horarios disponibles. Las fechas completas o sin agenda están desactivadas.</p><div class="date-grid">${days.map((d) => {
+          const disponible = fechasDisponibles.has(d.iso);
+          return `<button type="button" class="date-card${state.date === d.iso ? ' selected' : ''}" data-date="${d.iso}" aria-label="${d.day} ${d.num} ${d.month}${disponible ? ', disponible' : ', sin horarios disponibles'}"${disponible ? '' : ' disabled'}><small>${d.day}</small><strong>${d.num}</strong><span>${d.month}</span><em>${disponible ? 'Disponible' : 'Sin cupos'}</em></button>`;
+        }).join('')}</div>`;
+        if (!hayFechasDisponibles) {
+          panel.insertAdjacentHTML('beforeend', '<div class="empty-state"><h3>No hay fechas disponibles</h3><p>Este profesional no tiene horarios libres en los próximos días.</p></div>');
+        }
         qsa('[data-date]', panel).forEach((button) => button.addEventListener('click', async () => {
+          if (!fechasDisponibles.has(button.dataset.date)) return;
           state.date = button.dataset.date;
           state.time = null;
           state.step = 3;
           btnNext.disabled = true;
-          try { await loadSlots(); renderPanel(); }
-          catch (error) { showAlert(alertBox, error.message, 'error'); btnNext.disabled = false; }
+          try {
+            await loadSlots();
+            if (!state.slots.length) {
+              state.step = 2;
+              state.date = null;
+              state.availableDates = null;
+              state.availabilityMessage = 'Ese día se ocupó mientras seleccionabas. Elige otra fecha disponible.';
+              await renderPanel();
+              return;
+            }
+            await renderPanel();
+          } catch (error) {
+            state.step = 2;
+            state.date = null;
+            state.availableDates = null;
+            state.availabilityMessage = `No fue posible confirmar los horarios de esa fecha. ${error.message}`;
+            await renderPanel();
+          }
         }));
         break;
       }
       case 3:
+        btnNext.disabled = !state.time;
         panel.innerHTML = state.slots.length
           ? `<p class="step-hint">Horarios calculados con la agenda y las citas registradas en MySQL.</p><div class="slot-grid">${state.slots.map((slot) =>
               `<button type="button" class="slot${state.time === slot.hora ? ' selected' : ''}" data-slot="${escapeHtml(slot.hora)}">${escapeHtml(slot.hora)}${slot.disponibles > 1 ? ` · ${slot.disponibles} cupos` : ''}</button>`
@@ -146,6 +203,11 @@ export async function initAgendarPage() {
     btnBack.disabled = state.step === 0;
     btnNext.textContent = state.step === steps.length - 1 ? 'Confirmar cita' : 'Continuar';
     renderStepper();
+    initScrollReveal(panel);
+    if (state.availabilityMessage) {
+      showAlert(alertBox, state.availabilityMessage, 'error');
+      state.availabilityMessage = '';
+    }
   }
 
   function canContinue() {
@@ -190,6 +252,30 @@ export async function initAgendarPage() {
       btnBack.hidden = true;
       btnNext.hidden = true;
     } catch (error) {
+      if (error.message.includes('Ese horario acaba de ocuparse')) {
+        state.time = null;
+        try {
+          await loadSlots();
+          if (state.slots.length) {
+            state.step = 3;
+            state.availabilityMessage = 'Ese horario acaba de ocuparse. Selecciona otro horario disponible.';
+          } else {
+            state.step = 2;
+            state.date = null;
+            state.availableDates = null;
+            state.availabilityMessage = 'La fecha se quedó sin horarios disponibles. Selecciona otra fecha.';
+          }
+          await renderPanel();
+          return;
+        } catch (refreshError) {
+          state.step = 2;
+          state.date = null;
+          state.availableDates = null;
+          state.availabilityMessage = `No fue posible actualizar la disponibilidad. ${refreshError.message}`;
+          await renderPanel();
+          return;
+        }
+      }
       showAlert(alertBox, error.message, 'error');
       btnNext.disabled = false;
       btnNext.textContent = 'Confirmar cita';

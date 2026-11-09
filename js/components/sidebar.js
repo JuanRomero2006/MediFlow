@@ -208,28 +208,58 @@ function setupMobileDrawer() {
 
   if (!sidebar) return;
 
+  openBtn?.setAttribute('aria-controls', sidebar.id);
+  openBtn?.setAttribute('aria-expanded', 'false');
+
   const openDrawer = () => {
+    if (sidebar.classList.contains('mobile-open')) return;
     sidebar.classList.add('mobile-open');
     backdrop?.classList.add('mobile-open');
+    backdrop?.setAttribute('aria-hidden', 'false');
     document.body.classList.add('drawer-open');
     openBtn?.setAttribute('aria-expanded', 'true');
+    closeBtn?.focus?.();
   };
 
-  const closeDrawer = () => {
+  const closeDrawer = (restoreFocus = false) => {
+    if (!sidebar.classList.contains('mobile-open')) return;
     sidebar.classList.remove('mobile-open');
     backdrop?.classList.remove('mobile-open');
+    backdrop?.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('drawer-open');
     openBtn?.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) openBtn?.focus?.();
   };
 
   openBtn?.addEventListener('click', openDrawer);
-  closeBtn?.addEventListener('click', closeDrawer);
-  backdrop?.addEventListener('click', closeDrawer);
+  closeBtn?.addEventListener('click', () => closeDrawer(true));
+  backdrop?.addEventListener('click', () => closeDrawer(true));
 
-  // Cierre con la tecla Escape
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && sidebar.classList.contains('mobile-open')) {
-      closeDrawer();
+  window.addEventListener('keydown', (event) => {
+    if (!sidebar.classList.contains('mobile-open')) return;
+
+    if (event.key === 'Escape') {
+      closeDrawer(true);
+      return;
+    }
+
+    if (event.key === 'Tab') {
+      const focusable = [...sidebar.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )].filter((element) => element.getClientRects().length > 0);
+      if (!focusable.length) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
   });
 
@@ -256,6 +286,11 @@ function setupProfileDropdown(user) {
     dropdown.hidden = !isShown;
     trigger.setAttribute('aria-expanded', String(isShown));
   };
+
+  const displayName = user.nombreCompleto || ROLE_LABELS[user.rol] || 'usuario';
+  trigger.setAttribute('aria-label', `Menú de cuenta: ${displayName}`);
+  trigger.setAttribute('aria-controls', dropdown.id);
+  trigger.setAttribute('aria-expanded', 'false');
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();

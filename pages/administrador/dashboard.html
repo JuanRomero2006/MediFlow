@@ -109,8 +109,23 @@
       <main class="app-main" id="main-content">
         <div id="page-alert"></div>
 
-      <section><h1 class="dash-title">Panel administrativo</h1><p class="dash-subtitle">Gestión de demostración — requiere backend para producción.</p></section>
-      <section class="stat-grid"><article class="stat-card"><small>Pacientes demo</small><strong data-stat-pacientes>0</strong></article><article class="stat-card"><small>Personal demo</small><strong data-stat-staff>0</strong></article><article class="stat-card"><small>Chatbot</small><strong>FAQ local</strong></article></section>
+      <section class="dashboard-welcome">
+        <div><span class="dashboard-eyebrow">Administración</span><h1 class="dash-title">Panel general</h1><p class="dash-subtitle">Consulta los usuarios registrados y las opciones disponibles en esta versión.</p></div>
+        <div class="dashboard-welcome-actions"><a class="btn" href="usuarios.html"><span data-icon="users" data-icon-size="17"></span> Gestionar usuarios</a></div>
+      </section>
+      <section class="stat-grid" aria-label="Usuarios registrados">
+        <article class="stat-card"><small>Pacientes registrados</small><strong data-stat-pacientes>0</strong><span class="stat-caption">Cuentas con rol de paciente</span></article>
+        <article class="stat-card"><small>Personal registrado</small><strong data-stat-staff>0</strong><span class="stat-caption">Cuentas con otros roles</span></article>
+      </section>
+      <section class="dashboard-panel" aria-labelledby="admin-shortcuts-title">
+        <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Módulo disponible</span><h2 id="admin-shortcuts-title">Gestión de usuarios</h2></div></div>
+        <p>Consulta las cuentas, sus roles y su estado en el sistema.</p>
+        <a class="btn outline" href="usuarios.html">Abrir usuarios <span aria-hidden="true">→</span></a>
+      </section>
+      <section class="dashboard-limit" aria-label="Módulos administrativos aún no disponibles">
+        <span data-icon="alert-circle" data-icon-size="18" aria-hidden="true"></span>
+        <p>La administración de médicos y servicios, las estadísticas avanzadas y los reportes no están implementados en este proyecto.</p>
+      </section>
 
       </main>
     </div>

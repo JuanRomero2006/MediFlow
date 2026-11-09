@@ -2,11 +2,14 @@ import { initChatbot } from '../components/chatbot.js';
 import { specialties } from '../../data/specialties.js';
 import { professionals } from '../../data/professionals.js';
 import { escapeHtml } from '../utils/helpers.js';
+import { icon } from '../components/icons.js';
+import { initScrollReveal } from '../components/scroll-reveal.js';
 
 export function initHomePage() {
   initMobileMenu();
   renderSpecialtyGrid();
   renderProfessionalsGrid();
+  initScrollReveal();
   initChatbot({ brandName: 'MediFlow' });
 }
 
@@ -18,16 +21,24 @@ function initMobileMenu() {
   const closeMenu = () => {
     mobileMenu.classList.remove('open');
     menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.textContent = '☰';
+    menuButton.setAttribute('aria-label', 'Abrir menú');
+    menuButton.innerHTML = icon('menu', { size: 20 });
   };
 
   menuButton.addEventListener('click', () => {
     const isOpen = mobileMenu.classList.toggle('open');
     menuButton.setAttribute('aria-expanded', String(isOpen));
-    menuButton.textContent = isOpen ? '×' : '☰';
+    menuButton.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+    menuButton.innerHTML = icon(isOpen ? 'x' : 'menu', { size: 20 });
   });
 
   mobileMenu.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && mobileMenu.classList.contains('open')) {
+      closeMenu();
+      menuButton.focus();
+    }
+  });
 }
 
 function renderSpecialtyGrid() {

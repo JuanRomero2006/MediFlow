@@ -109,9 +109,19 @@
       <main class="app-main" id="main-content">
         <div id="page-alert"></div>
 
-      <section><h1 class="dash-title">Operación del día</h1><p class="dash-subtitle">Clínica Previred · Neiva (demostración)</p></section>
-      <section class="stat-grid"><article class="stat-card"><small>Citas hoy</small><strong data-stat-citas>0</strong></article><article class="stat-card"><small>Pendientes</small><strong data-stat-pendientes>0</strong></article><article class="stat-card"><small>Turnos activos</small><strong>—</strong></article></section>
-      <section class="data-table-wrap"><table class="data-table" id="dashboard-citas-table"></table></section>
+      <section class="dashboard-welcome">
+        <div><span class="dashboard-eyebrow">Operación de recepción</span><h1 class="dash-title">Agenda y atención</h1><p class="dash-subtitle">Resumen de citas y turnos del día, con datos consultados desde el sistema.</p></div>
+        <div class="dashboard-welcome-actions"><a class="btn" href="citas.html"><span data-icon="calendar" data-icon-size="17"></span> Gestionar citas</a><a class="btn outline" href="turnos.html">Ver turnos</a></div>
+      </section>
+      <section class="stat-grid" aria-label="Resumen de hoy">
+        <article class="stat-card"><small>Citas hoy</small><strong data-stat-citas>0</strong><span class="stat-caption">Citas en la agenda de hoy</span></article>
+        <article class="stat-card"><small>Pendientes</small><strong data-stat-pendientes>0</strong><span class="stat-caption">Citas que requieren seguimiento</span></article>
+        <article class="stat-card"><small>Turnos activos</small><strong data-stat-turnos>0</strong><span class="stat-caption">Turnos abiertos para hoy</span></article>
+      </section>
+      <section class="dashboard-panel" aria-labelledby="reception-appointments-title">
+        <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Vista general</span><h2 id="reception-appointments-title">Citas registradas</h2></div><a href="citas.html">Abrir agenda <span aria-hidden="true">→</span></a></div>
+        <div class="data-table-wrap"><table class="data-table" id="dashboard-citas-table"></table></div>
+      </section>
 
       </main>
     </div>

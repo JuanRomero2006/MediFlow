@@ -109,14 +109,33 @@
       <main class="app-main" id="main-content">
         <div id="page-alert"></div>
 
-      <section><h1 class="dash-title" data-greeting>Hola 👋</h1><p class="dash-subtitle">Resumen de tu atención (demostración).</p></section>
-      <section class="stat-grid">
-        <article class="stat-card"><small>Citas próximas</small><strong data-stat-citas>0</strong></article>
-        <article class="stat-card"><small>Turnos hoy</small><strong>1</strong></article>
-        <article class="stat-card"><small>Notificaciones</small><strong>0</strong></article>
+      <section class="dashboard-welcome">
+        <div>
+          <span class="dashboard-eyebrow">Tu espacio en MediFlow</span>
+          <h1 class="dash-title" data-greeting>Hola</h1>
+          <p class="dash-subtitle">Consulta tus citas y mantén a mano la información de tu cuenta.</p>
+        </div>
+        <div class="dashboard-welcome-actions">
+          <a class="btn" href="../agendar.html"><span data-icon="calendar" data-icon-size="17"></span> Solicitar cita</a>
+          <a class="btn outline" href="citas.html">Ver mis citas</a>
+        </div>
       </section>
-      <section class="highlight-panel" data-next-cita><p>Próxima cita aparecerá aquí.</p></section>
-      <section><h2 class="dash-title" style="font-size:1.1rem">Mis citas</h2><div class="cards-grid" data-citas-list></div></section>
+      <section class="stat-grid">
+        <article class="stat-card"><small>Citas próximas</small><strong data-stat-citas>0</strong><span class="stat-caption">Según las citas registradas en tu cuenta</span></article>
+      </section>
+      <section class="dashboard-panel" aria-labelledby="next-appointment-title">
+        <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Agenda</span><h2 id="next-appointment-title">Tu próxima atención</h2></div><a href="citas.html">Ver todas <span aria-hidden="true">→</span></a></div>
+        <div class="highlight-panel" data-next-cita><p>La información de tu próxima cita aparecerá aquí cuando esté registrada.</p></div>
+      </section>
+      <section class="dashboard-panel" aria-labelledby="my-appointments-title">
+        <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Seguimiento</span><h2 id="my-appointments-title">Mis citas</h2></div><a href="citas.html">Administrar citas <span aria-hidden="true">→</span></a></div>
+        <div class="cards-grid" data-citas-list></div>
+      </section>
+      <section class="dashboard-limit" aria-label="Funciones aún no disponibles">
+        <span data-icon="alert-circle" data-icon-size="18" aria-hidden="true"></span>
+        <p>El historial clínico y la carga de documentos todavía no están disponibles en esta versión de MediFlow.</p>
+        <a href="perfil.html">Consultar mi perfil</a>
+      </section>
       <div class="modal" id="detail-modal" hidden aria-hidden="true"><div class="modal-card"><button type="button" class="close-chat" data-modal-close>×</button><div id="detail-body"></div></div></div>
 
       </main>

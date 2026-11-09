@@ -9,7 +9,7 @@ Esta versión organiza el sitio público en páginas independientes, conserva lo
 - Entorno local recomendado: XAMPP.
 
 ## Instalación con XAMPP
-1. Descomprime esta carpeta dentro de `C:\xampp\htdocs\MediFlow` (o utiliza el nombre `Proyecto` y adapta la URL).
+1. Deja el proyecto en `C:\xampp\htdocs\Proyecto` (o adapta la URL si usas otra carpeta).
 2. Inicia Apache y MySQL desde XAMPP.
 3. Abre `http://localhost/phpmyadmin`.
 4. Importa `database/01_clinica_previred.sql`.
@@ -17,10 +17,10 @@ Esta versión organiza el sitio público en páginas independientes, conserva lo
 6. Importa `database/04_horarios_demo.sql` para crear horarios de demostración (solo lunes a viernes).
 7. Importa `database/05_actualizar_vista_citas_contacto.sql` para actualizar la vista usada por la agenda médica (también aplica sobre instalaciones existentes).
 8. Opcional: importa `database/03_fase2_chatbot_notificaciones.sql` para tablas del chatbot y notificaciones.
-9. Comprueba que `api/config/conexion.php` tenga el host, usuario, contraseña y base de datos correctos. En XAMPP local predeterminado utiliza `root` sin contraseña.
-10. Abre `http://localhost/MediFlow/` y luego `http://localhost/MediFlow/pages/login.html`.
+9. Configura `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` en `.env` (XAMPP local predeterminado: `root` sin contraseña). PHP lee este archivo automáticamente; también puedes definir esas variables en el servidor.
+10. Abre `http://localhost/Proyecto/` y luego `http://localhost/Proyecto/pages/login.html`.
 
-> No abras el proyecto con `file://`. PHP necesita Apache; `npm start` no ejecuta los endpoints PHP.
+> No abras el proyecto con `file://`, Live Server ni `npm start`: esos métodos no ejecutan estos endpoints PHP. Usa Apache desde XAMPP y accede mediante `http://localhost/Proyecto/`.
 
 ## Páginas públicas separadas
 - `index.html`: inicio y accesos destacados.
@@ -35,9 +35,9 @@ Esta versión organiza el sitio público en páginas independientes, conserva lo
 Los menús apuntan a páginas específicas y los módulos privados mantienen rutas separadas para paciente, recepción, médico y administración.
 
 ## Estado real de la conexión
-El backend PHP incluido implementa autenticación de servidor y sesión PHP (`api/login.php`, `api/me.php`, `api/logout.php`) con token CSRF. El modelo SQL incluye usuarios/roles, pacientes, médicos, especialidades, sedes, citas, horarios y turnos, además de las tablas opcionales de chatbot y notificaciones.
+El backend PHP incluido implementa autenticación de servidor y sesión PHP (`api/login.php`, `api/me.php`, `api/logout.php`) con token CSRF. `api/estado.php` permite comprobar que el backend alcanza MySQL y consulta el número de tablas, sin exponer cuentas ni datos de conexión. El modelo SQL incluye usuarios/roles, pacientes, médicos, especialidades, sedes, citas, horarios y turnos, además de las tablas opcionales de chatbot y notificaciones.
 
-**Estado de citas:** `api/citas.php` registra una cita en MySQL mediante una sesión de paciente autenticado y valida al profesional, la especialidad y el horario configurado. La base de datos aplica además sus reglas de negocio y evita registrar una cita cuando el cupo ya está ocupado. `database/04_horarios_demo.sql` añade horarios ilustrativos para pruebas locales; deben reemplazarse por los horarios reales de la clínica. Los paneles de paciente y recepción consultan las citas mediante `api/citas.php`; el paciente puede cancelar sus propias citas y recepción puede confirmarlas o registrar llegadas. `api/turnos.php` permite a recepción consultar los turnos del día y actualizar sus estados. La agenda y listado de pacientes del médico consultan ahora las citas asignadas a su usuario; al finalizar una cita se actualizan también los turnos relacionados. El panel de paciente consulta sus turnos desde MySQL. El administrador consulta el listado de usuarios y sus roles desde MySQL. El módulo de historia clínica todavía no persiste notas médicas y debe implementarse como una fase independiente. Los perfiles e imágenes del sitio público son ilustrativos y no constituyen disponibilidad médica real.
+**Estado de citas y turnos:** `api/citas.php` registra una cita en MySQL mediante una sesión de paciente autenticado y valida al profesional, la especialidad y el horario configurado. La base de datos aplica además sus reglas de negocio y evita registrar una cita cuando el cupo ya está ocupado. `database/04_horarios_demo.sql` añade horarios ilustrativos para pruebas locales; deben reemplazarse por los horarios reales de la clínica. Los paneles de paciente y recepción consultan las citas mediante `api/citas.php`; el paciente puede cancelar sus propias citas y recepción puede confirmarlas o registrar llegadas. El paciente también puede hacer check-in virtual desde su módulo de turnos, únicamente el día de una cita propia activa; el turno es único por cita y su estado se consulta automáticamente cada 10 segundos. `api/turnos.php` permite a recepción consultar los turnos del día y actualizar sus estados. La agenda y listado de pacientes del médico consultan ahora las citas asignadas a su usuario; al finalizar una cita se actualizan también los turnos relacionados. El administrador consulta el listado de usuarios y sus roles desde MySQL. El módulo de historia clínica todavía no persiste notas médicas y debe implementarse como una fase independiente. Los perfiles e imágenes del sitio público son ilustrativos y no constituyen disponibilidad médica real.
 
 ## Cuentas de demostración
 Las cuentas que contiene `database/02_datos_demo.sql` usan la contraseña documentada en `README_BACKEND.md` del paquete de backend: `MediFlow2026`. Si no funciona el login, verifica que hayas importado ambos archivos SQL en el orden indicado y que el servidor PHP tenga la extensión `mysqli` habilitada.

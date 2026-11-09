@@ -193,6 +193,7 @@
 .choice-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .choice-card{min-height:142px;padding:20px;border-radius:18px;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
 .choice-card:hover{transform:translateY(-3px);border-color:#83c9cc;box-shadow:0 12px 28px #168c9618}
+.choice-card:active,.date-card:active,.slot:active{transform:scale(.985)}
 .choice-card>b{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--primary);font-size:20px}
 .choice-card strong{font:750 15px 'Plus Jakarta Sans',sans-serif;margin-top:12px}
 .choice-card small{line-height:1.5}
@@ -202,6 +203,9 @@
 .date-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:12px}
 .date-card,.slot{border-radius:14px;padding:14px 10px;transition:all .18s ease}
 .date-card:hover,.slot:hover{border-color:#83c9cc;transform:translateY(-2px)}
+.date-card:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.date-card em{font-size:.68rem;font-style:normal;font-weight:700;color:var(--muted)}
+.date-card:disabled em{color:var(--slate-500)}
 .date-card small,.date-card span{color:var(--muted);text-transform:capitalize}
 .date-card strong{font:800 24px 'Plus Jakarta Sans',sans-serif;margin:3px 0}
 .slot-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
